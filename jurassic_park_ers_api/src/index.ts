@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import { userRouter, users } from './routers/user-router'
-import { reimbursementRouter, reimbursements } from './routers/reimbursement-router'
+import { reimbursementRouter } from './routers/reimbursement-router'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import { sessionMiddleware } from './middleware/session-middleware'
 import { InvalidCredentialsError } from './errors/InvalidCredentialsError'
