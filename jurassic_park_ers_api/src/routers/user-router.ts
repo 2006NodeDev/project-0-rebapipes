@@ -1,7 +1,9 @@
-import express, {Request, Response, NextFunction} from 'express'
-import {User} from '../models/User'
-import {authenticationMiddleware} from '../middleware/authentication-middleware'
-import {authorizationMiddleware} from '../middleware/authorization-middleware'
+import express, { Request, Response, NextFunction } from 'express'
+import { authenticationMiddleware } from '../middleware/authentication-middleware'
+import { getAllUsers, getUserById, saveOneUser } from '../daos/user-dao'
+import { authorizationMiddleware } from '../middleware/authorization-middleware'
+import { UserUserInputError } from '../errors/UserUserInputError'
+import { User } from '../models/User'
 
 export const userRouter = express.Router()
 
@@ -11,7 +13,6 @@ userRouter.get('/', authorizationMiddleware(['admin']), (req:Request,res:Respons
     res.json(users)
 })
 
-// find user by ID
 userRouter.get('/:id', authorizationMiddleware(['admin', 'finance-manager']), (req:Request, res:Response)=>{//figure out how to do basically userId===userId
     let {id} = req.params
     if(isNaN(+id)){
@@ -30,7 +31,6 @@ userRouter.get('/:id', authorizationMiddleware(['admin', 'finance-manager']), (r
     }
 })
 
-// update user
 userRouter.patch('/', authorizationMiddleware(['admin']), authenticationMiddleware, (req: Request, res:Response)=>{
     const user = users.find(val => val.userId === Number(req.params.id));
     user.username = req.body.name;
