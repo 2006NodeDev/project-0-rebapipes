@@ -11,11 +11,9 @@ const app = express()
 app.use(express.json())
 
 app.use(loggingMiddleware)
-
 app.use(sessionMiddleware)
 
 app.use('/reimbursements', reimbursementRouter)
-
 app.use('/users', userRouter)
 
 app.post('/login', (req:Request, res:Response)=>{
