@@ -1,11 +1,11 @@
 import { ReimbursementDTO } from "../dtos/reimbursement-dto";
 import { Reimbursement } from "../models/Reimbursement";
 
-// works perfectly with the map function
-export function BookDTOtoBookConvertor( bto:BookDTO):Book{
+// update below code
+export function ReimbursementDTOtoReimbursementConvertor( bto:ReimbursementDTO):Reimbursement{
     let genre:Genre[] = [];
     for(const g of bto.genres){
-        genre.push({genreId:0, genre:g})// this si a problem to solve in the future
+        genre.push({genreId:0, genre:g})
     }
     return {
         ISBN: bto.ISBN.toString(),
