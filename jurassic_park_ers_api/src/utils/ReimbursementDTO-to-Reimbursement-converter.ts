@@ -2,7 +2,7 @@ import { ReimbursementDTO } from "../dtos/reimbursement-dto";
 import { Reimbursement } from "../models/Reimbursement";
 
 // update below code
-export function ReimbursementDTOtoReimbursementConvertor( bto:ReimbursementDTO):Reimbursement{
+export function ReimbursementDTOtoReimbursementConverter( bto:ReimbursementDTO):Reimbursement{
     let genre:Genre[] = [];
     for(const g of bto.genres){
         genre.push({genreId:0, genre:g})

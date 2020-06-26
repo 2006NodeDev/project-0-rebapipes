@@ -1,6 +1,6 @@
 import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
-import { ReimbursementDTOtoReimbursementConvertor } from "../utils/ReimbursementDTO-to-Book-converter";
+import { ReimbursementDTOtoReimbursementConverter } from "../utils/ReimbursementDTO-to-Reimbursement-converter";
 import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError";
 
 export async function getAllReimbursements() {
@@ -14,7 +14,7 @@ export async function getAllReimbursements() {
                                                     natural join lightlyburning.books_genre bg
                                                     natural join lightlyburning.genre g
                                                     group by b.book_id;`)
-        return results.rows.map(ReimbursementDTOtoReimbursementConvertor)
+        return results.rows.map(ReimbursementDTOtoReimbursementConverter)
     } catch (e) {
         console.log(e)
         throw new Error('un-implemented error handling')
