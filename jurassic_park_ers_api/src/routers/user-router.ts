@@ -83,7 +83,7 @@ export let users:User[] =[
         lastName: 'Sattler',
         email: 'ellie.sattler@jurassicpark.com',
         role: {
-            roleId: 4,
+            roleId: 3,
             role: `employee`
         }  
     },
@@ -95,7 +95,7 @@ export let users:User[] =[
         lastName: 'Murphy',
         email: 'lex.murphy@jurassicpark.com',
         role: {
-            roleId: 5,
+            roleId: 3,
             role: `employee`
         }  
     },
@@ -107,7 +107,7 @@ export let users:User[] =[
         lastName: 'Dearing',
         email: 'claire.dearing@jurassicpark.com',
         role: {
-            roleId: 6,
+            roleId: 3,
             role: `employee`
         }  
     },
@@ -119,7 +119,7 @@ export let users:User[] =[
         lastName: 'Wu',
         email: 'henry.wu@jurassicpark.com',
         role: {
-            roleId: 7,
+            roleId: 3,
             role: `employee`
         }  
     },
@@ -131,7 +131,7 @@ export let users:User[] =[
         lastName: 'Benton',
         email: 'arby.benton@jurassicpark.com',
         role: {
-            roleId: 8,
+            roleId: 3,
             role: `employee`
         }  
     },
@@ -143,7 +143,7 @@ export let users:User[] =[
         lastName: 'Thorne',
         email: 'jack.thorne@jurassicpark.com',
         role: {
-            roleId: 9,
+            roleId: 3,
             role: `employee`
         }  
     },
@@ -155,8 +155,23 @@ export let users:User[] =[
         lastName: 'Rodriguez',
         email: 'zia.rodriguez@jurassicpark.com',
         role: {
-            roleId: 10,
+            roleId: 3,
             role: `employee`
         }  
     },
+]
+
+export let role: Role[] = [
+    {
+        roleId: 1,
+        role: 'admin'
+    },
+    {
+        roleId: 2,
+        role: 'finance-manager'
+    },
+    {
+        roleId: 3,
+        role: 'employee'
+    }
 ]
