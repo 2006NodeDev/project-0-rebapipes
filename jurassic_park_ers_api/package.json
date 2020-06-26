@@ -1,7 +1,7 @@
 {
-  "name": "project-0-rebapipes",
+  "name": "jurassic_park_ers_api",
   "version": "1.0.0",
-  "description": "The Expense Reimbursement System (ERS) will manage the process of reimbursing employees for expenses incurred while on company time.",
+  "description": "Jurassic Park's Expense Reimbursement System (ERS) API will manage the process of reimbursing employees for expenses incurred while on company time.",
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon --exec ts-node src/index.ts",
