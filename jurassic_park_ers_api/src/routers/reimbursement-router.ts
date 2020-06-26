@@ -15,21 +15,23 @@ reimbursementRouter.get('/', async (req: Request, res: Response, next: NextFunct
 
 })
 
-// for saving a new reimbursement
-// this endpoint will run all the middleware functions one at a time
-reimbursementRouter.post('/', (req: Request, res: Response) => {
-    console.log(req.body);
-    let { reimbursementId,
-        users,
-        } = req.body // destructuring
-    // warning: if data is allowed to be null or 0, or false, this check is not sufficient
-    if (reimbursementId && users && (! && typeof ( ) === 'boolean' || ) && ) {
-        // reimbursements.push({ reimbursementId, users })
-        // sendStatus just sents an empty response with the status code provided
-        res.sendStatus(201) // 201 is created
-    } else {
-        // .status sets the status code but deson't send res
-        // .send can send a response in many different content-types
+reimbursementRouter.post('/', (req:Request, res:Response, next:NextFunction)=>{
+    let {
+        reimbursementId = 0,
+        author,
+        amount,
+        dateSubmitted,
+        dateResolved,
+        description,
+        resolver,
+        status,
+        type
+    } = req.body
+    if(reimbursementId && author && amount && dateSubmitted && dateResolved && description && resolver && status && type){
+        reimbursements.push({reimbursementId, author, amount, dateSubmitted, dateResolved, description, resolver, status, type})
+        res.status(201).send(reimbursements[reimbursements.length-1]);
+    } else{
+        console.log(`reimbursement id: ${reimbursementId}`)
         throw new ReimbursementUserInputError()
     }
 })

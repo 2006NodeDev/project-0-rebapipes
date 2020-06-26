@@ -1,4 +1,7 @@
-import { Role } from "./Role"
+export class Role {
+  roleId: number // primary Key
+  role: string // not null, unique
+}
 
 export class User{
     userId: number // primary key
