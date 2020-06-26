@@ -1,4 +1,3 @@
-  
 import { PoolClient } from "pg";
 import { connectionPool } from ".";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
