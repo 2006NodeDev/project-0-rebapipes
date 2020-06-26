@@ -16,12 +16,10 @@ export function authorizationMiddleware(roles:string[]){
 
 }
 
-
 // allow admin+manager
 
-//allow only admin
+// allow only admin
 
-//allow user + manage + admin
+// allow user + manage + admin
 
-//allow user + admin
-
+// allow user + admin
