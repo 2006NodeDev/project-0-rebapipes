@@ -2,20 +2,21 @@ import express, { Request, Response, NextFunction } from 'express'
 import { User } from '../models/User'
 import { authenticationMiddleware } from '../middleware/authentication-middleware'
 import { authorizationMiddleware } from '../middleware/authorization-middleware'
-
+// our base path is /users
 export const userRouter = express.Router()
 
+// this applies this middleware to the entire router beneath it
 userRouter.use(authenticationMiddleware)
 
 
-// retrieve all users
+// Get all
 userRouter.get('/', authorizationMiddleware(['Admin']), (req:Request,res:Response,next:NextFunction)=>{
     res.json(users)
 })
 
 
-// retrieve user(s) by id
-userRouter.get('/:id', authorizationMiddleware(['Admin', 'Finance Manager']), (req:Request, res:Response)=>{
+//get by id
+userRouter.get('/:id', authorizationMiddleware(['Admin', 'Manager']), (req:Request, res:Response)=>{
     let {id} = req.params
     if(isNaN(+id)){
         // send a response telling them they need to give us a number
@@ -24,12 +25,12 @@ userRouter.get('/:id', authorizationMiddleware(['Admin', 'Finance Manager']), (r
         let found = false
         for(const user of users){
             if(user.userId === +id){
-                res.json(user)// successfully found user based on id
+                res.json(user)// successfully foundthe user based on id
                 found = true
             }
         }
         if(!found){
-            res.status(404).send('User Not Found') // user id doesn't exist
+            res.status(404).send('User Not Found')//the id doesn't exist
         }
     }
 })
