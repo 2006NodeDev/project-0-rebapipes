@@ -1,7 +1,19 @@
 import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
+import { Reimbursement } from "../models/Reimbursement";
 import { ReimbursementDTOtoReimbursementConverter } from "../utils/ReimbursementDTO-to-Reimbursement-converter";
 import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError";
+
+
+import { User } from "../models/User";
+import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
+import { UserNotFoundError } from "../errors/UserNotFoundError";
+import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsError";
+
+import { UserReimbursementInputError } from "../errors/UserReimbursementInputError";
+import { AuthenticationError } from '../errors/AuthenticationError'
+import { AuthorizationError } from '../errors/AuthorizationError'
+import { LoginUserInputError } from "../errors/LoginUserInputError";
 
 export async function getAllReimbursements() {
     let client: PoolClient; 

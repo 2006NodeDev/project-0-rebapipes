@@ -1,10 +1,11 @@
 import { PoolClient } from "pg";
 import { connectionPool } from ".";
-import { User, Role } from "../models/User";
+import { User } from "../models/User";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
 import { UserNotFoundError } from "../errors/UserNotFoundError";
-import { UserReimbursementInputError } from "../errors/UserReimbursementInputError";
 import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsError";
+
+import { UserReimbursementInputError } from "../errors/UserReimbursementInputError";
 import { AuthenticationError } from '../errors/AuthenticationError'
 import { AuthorizationError } from '../errors/AuthorizationError'
 import { LoginUserInputError } from "../errors/LoginUserInputError";

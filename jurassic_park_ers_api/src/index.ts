@@ -51,8 +51,8 @@ app.post('/login', async (req:Request, res:Response, next:NextFunction)=>{
 })
 
 app.use((err, req, res, next) =>{
-    if (err.statusCode){
-        res.status(err.statusCode).send(err.message)
+    if (err.StatusCode){
+        res.status(err.StatusCode).send(err.message)
     }else{
         console.log(err)
         res.status(500).send('Oops, Something Went Wrong')
