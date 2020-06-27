@@ -47,7 +47,7 @@ export let users:User[] =[
             email: 'charles.darwin@jurassicpark.com',
             role: {
                 roleId: 1,
-                role: `admin`
+                role: `Admin`
             }
 
     },
@@ -60,7 +60,7 @@ export let users:User[] =[
         email: 'john.hammond@jurassicpark.com',
         role: {
             roleId: 2,
-            role: `finance-manager`
+            role: `Finance-Manager`
         }
     },
     {
@@ -72,7 +72,7 @@ export let users:User[] =[
         email: 'benjamin.lockwood@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
     {
@@ -84,7 +84,7 @@ export let users:User[] =[
         email: 'ellie.sattler@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
     {
@@ -96,7 +96,7 @@ export let users:User[] =[
         email: 'lex.murphy@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
     {
@@ -108,7 +108,7 @@ export let users:User[] =[
         email: 'claire.dearing@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
     {
@@ -120,7 +120,7 @@ export let users:User[] =[
         email: 'henry.wu@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
     {
@@ -132,7 +132,7 @@ export let users:User[] =[
         email: 'arby.benton@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
     {
@@ -144,7 +144,7 @@ export let users:User[] =[
         email: 'jack.thorne@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
     {
@@ -156,7 +156,7 @@ export let users:User[] =[
         email: 'zia.rodriguez@jurassicpark.com',
         role: {
             roleId: 3,
-            role: `employee`
+            role: `User`
         }  
     },
 ]
