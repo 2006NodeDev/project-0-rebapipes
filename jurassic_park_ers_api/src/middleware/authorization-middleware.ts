@@ -13,7 +13,6 @@ export function authorizationMiddleware(roles:string[]){
             res.status(401).send('The incoming token has expired')
         }
     }
-
 }
 
 // allow admin+manager
