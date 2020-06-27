@@ -1,21 +1,22 @@
 import express, { Request, Response, NextFunction } from 'express'
+import { User, Role } from '../models/User'
 import { authenticationMiddleware } from '../middleware/authentication-middleware'
 import { getAllUsers, getUserById, saveOneUser } from '../daos/user-dao'
 import { authorizationMiddleware } from '../middleware/authorization-middleware'
 import { UserUserInputError } from '../errors/UserUserInputError'
-import { User } from '../models/User'
 
 export const userRouter = express.Router()
 
-userRouter.use(authenticationMiddleware)
-
-userRouter.get('/', authorizationMiddleware(['admin']), (req:Request,res:Response,next:NextFunction)=>{
+// Get all Users
+userRouter.get('/', (req:Request,res:Response,next:NextFunction)=>{
     res.json(users)
 })
 
-userRouter.get('/:id', authorizationMiddleware(['admin', 'finance-manager']), (req:Request, res:Response)=>{//figure out how to do basically userId===userId
+// Users by ID
+userRouter.get('/:id', (req:Request, res:Response)=>{
     let {id} = req.params
     if(isNaN(+id)){
+        
         res.status(400).send('ID must be a number')
     } else {
         let found = false
@@ -31,10 +32,54 @@ userRouter.get('/:id', authorizationMiddleware(['admin', 'finance-manager']), (r
     }
 })
 
-userRouter.patch('/', authorizationMiddleware(['admin']), authenticationMiddleware, (req: Request, res:Response)=>{
-    const user = users.find(val => val.userId === Number(req.params.id));
-    user.username = req.body.name;
-    return res.json({message: "Updated"})
+// Update User
+userRouter.patch('/', (req:Request, res:Response, next:NextFunction)=>{
+    let id = req.body.userId;
+
+    if(!id){
+        throw res.status(404).send('User Not Found')
+    }else if(isNaN(+id)){
+        res.status(400).send("User ID must be a number");
+    }else{
+        let found = false;
+        for(const user of users){
+            if(user.userId === +id){
+
+                let username = req.body.username;
+                let password = req.body.password;
+                let firstName = req.body.firstName;
+                let lastName = req.body.lastName;
+                let email = req.body.email;
+                let role = req.body.role;
+
+                if(username){
+                    user.username = username;
+                }
+                if(password){
+                    user.password = password;
+                }
+                if(firstName){
+                    user.firstName = firstName;
+                }
+                if(lastName){
+                    user.lastName = lastName;
+                }
+                if(email){
+                    user.email = email;
+                }
+                if (role){
+                    user.role = role;
+                }
+
+                res.json(user);
+                found = true;
+            }
+        }
+        if(!found){
+            res.status(404).send('User Not Found')
+        }
+    }
+
 })
 
 export let users:User[] =[
@@ -161,7 +206,7 @@ export let users:User[] =[
     },
 ]
 
-export let role: Role[] = [
+export let role:Role[] = [
     {
         roleId: 1,
         role: 'admin'
