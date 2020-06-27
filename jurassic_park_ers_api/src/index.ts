@@ -4,7 +4,7 @@ import { reimbursementRouter } from './routers/reimbursement-router'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import { sessionMiddleware } from './middleware/session-middleware'
 import { InvalidCredentialsError } from './errors/InvalidCredentialsError'
-import { AuthFailureError } from './errors/AuthFailureError'
+import { AuthenticationError } from './errors/AuthenticationError'
 
 const app = express()
 
@@ -31,7 +31,7 @@ app.post('/login', (req:Request, res:Response)=>{
             }
         }
         if(!found){
-            throw new AuthFailureError()
+            throw new AuthenticationError()
         }
     }
 })

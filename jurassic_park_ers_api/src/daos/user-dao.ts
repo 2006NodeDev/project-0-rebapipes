@@ -3,7 +3,7 @@ import { connectionPool } from ".";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
 import { UserNotFoundError } from "../errors/UserNotFoundError";
 import { User } from "../models/User";
-import { AuthFailureError} from '../errors/AuthFailureError'
+import { AuthenticationError} from '../errors/AuthenticationError'
 import { UserUserInputError } from "../errors/UserUserInputError";
 
 export async function getAllUsers():Promise<User[]> {
@@ -73,7 +73,7 @@ export async function getUserByUsernameAndPassword(username:string, password:str
         return UserDTOtoUserConvertor(results.rows[0])
     } catch (e) {
         if(e.message === 'User Not Found'){
-            throw new AuthFailureError()
+            throw new AuthenticationError()
         }
         console.log(e)
         throw new Error('Unhandled Error Occured')
