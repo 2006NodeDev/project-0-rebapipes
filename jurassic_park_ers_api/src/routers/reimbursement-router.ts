@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { Reimbursement, ReimbursementStatus, ReimbursementType } from "../models/Reimbursement";
-import { ReimbursementUserInputError } from '../errors/ReimbursementUserInputError'
+import { ReimbursementUserInputError } from '../errors/UserReimbursementInputError'
 import { ReimbursementIdInputError } from '../errors/ReimbursementIdInputError'
 import { getAllReimbursements, findreimbursementById } from '../daos/reimbursement-dao'
 import { ReimbursementNotFoundError } from '../errors/ReimbursementNotFoundError';

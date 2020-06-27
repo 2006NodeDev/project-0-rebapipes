@@ -3,7 +3,7 @@ import { User, Role } from '../models/User'
 import { authenticationMiddleware } from '../middleware/authentication-middleware'
 import { getAllUsers, getUserById, saveOneUser } from '../daos/user-dao'
 import { authorizationMiddleware } from '../middleware/authorization-middleware'
-import { UserUserInputError } from '../errors/UserUserInputError'
+import { UserUserInputError } from '../errors/LoginUserInputError'
 
 export const userRouter = express.Router()
 

@@ -3,11 +3,11 @@ import { connectionPool } from ".";
 import { User } from "../models/User";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
 import { UserNotFoundError } from "../errors/UserNotFoundError";
-import { ReimbursementUserInputError } from "../errors/ReimbursementUserInputError";
-import { UserUserInputError } from "../errors/UserUserInputError";
+import { ReimbursementUserInputError } from "../errors/UserReimbursementInputError";
+import { UserUserInputError } from "../errors/LoginUserInputError";
 import { AuthenticationError } from '../errors/AuthenticationError'
 import { AuthorizationError } from '../errors/AuthorizationError'
-import { UserUserInputError } from "../errors/UserUserInputError";
+import { UserUserInputError } from "../errors/LoginUserInputError";
 
 export async function getAllUsers():Promise<User[]> {
     let client: PoolClient

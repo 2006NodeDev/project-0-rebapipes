@@ -3,7 +3,7 @@ import { userRouter, users } from './routers/user-router'
 import { reimbursementRouter } from './routers/reimbursement-router'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import { sessionMiddleware } from './middleware/session-middleware'
-import { InvalidCredentialsError } from './errors/InvalidCredentialsError'
+import { InvalidCredentialsError } from './errors/LoginInvalidCredentialsError'
 import { AuthenticationError } from './errors/AuthenticationError'
 
 const app = express()
