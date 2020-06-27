@@ -3,8 +3,12 @@ import { userRouter, users } from './routers/user-router'
 import { reimbursementRouter } from './routers/reimbursement-router'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import { sessionMiddleware } from './middleware/session-middleware'
-import { InvalidCredentialsError } from './errors/LoginInvalidCredentialsError'
+import { LoginInvalidCredentialsError } from './errors/LoginInvalidCredentialsError'
 import { AuthenticationError } from './errors/AuthenticationError'
+import { AuthorizationError } from './errors/AuthorizationError'
+import { LoginUserInputError } from './errors/LoginUserInputError'
+import { UserNotFoundError } from './errors/UserNotFoundError'
+import { UserReimbursementInputError } from './errors/UserReimbursementInputError'
 
 const app = express()
 
@@ -20,7 +24,7 @@ app.post('/login', (req:Request, res:Response)=>{
     let username = req.body.username
     let password = req.body.password
     if(!username || !password){
-        throw new InvalidCredentialsError()
+        throw new LoginInvalidCredentialsError()
     } else {
         let found = false
         for(const user of users) {
@@ -31,7 +35,7 @@ app.post('/login', (req:Request, res:Response)=>{
             }
         }
         if(!found){
-            throw new AuthenticationError()
+            throw new AuthorizationError()
         }
     }
 })
@@ -41,7 +45,7 @@ app.use((err, req, res, next) => {
         res.status(err.statusCode).send(err.message)
     } else {
         console.log(err)
-        res.status(500).send('Oops, Something went wrong')
+        res.status(500).send('Oops, Something Went Wrong')
     }
 })
 

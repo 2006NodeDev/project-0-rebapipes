@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 import { connectionPool } from ".";
-import { User } from "../models/User";
+import { User, Role } from "../models/User";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
 import { UserNotFoundError } from "../errors/UserNotFoundError";
-import { ReimbursementUserInputError } from "../errors/UserReimbursementInputError";
-import { UserUserInputError } from "../errors/LoginUserInputError";
+import { UserReimbursementInputError } from "../errors/UserReimbursementInputError";
+import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsError";
 import { AuthenticationError } from '../errors/AuthenticationError'
 import { AuthorizationError } from '../errors/AuthorizationError'
-import { UserUserInputError } from "../errors/LoginUserInputError";
+import { LoginUserInputError } from "../errors/LoginUserInputError";
 
 export async function getAllUsers():Promise<User[]> {
     let client: PoolClient
