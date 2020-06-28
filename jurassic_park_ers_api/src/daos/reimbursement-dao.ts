@@ -1,65 +1,96 @@
-import { PoolClient, QueryResult } from "pg";
+import { PoolClient } from "pg";
 import { connectionPool } from ".";
-import { Reimbursement } from "../models/Reimbursement";
-import { ReimbursementDTOtoReimbursementConverter } from "../utils/ReimbursementDTO-to-Reimbursement-converter";
-import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError";
-
-
 import { User } from "../models/User";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
 import { UserNotFoundError } from "../errors/UserNotFoundError";
 import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsError";
-
-import { UserReimbursementInputError } from "../errors/UserReimbursementInputError";
 import { AuthenticationError } from '../errors/AuthenticationError'
 import { AuthorizationError } from '../errors/AuthorizationError'
-import { LoginUserInputError } from "../errors/LoginUserInputError";
 
-export async function getAllReimbursements() {
-    let client: PoolClient; 
-    try {
-        client = await connectionPool.connect() // update query below
-        let results: QueryResult = await client.query(`select b.book_id, b."pages", b.chapters, b."ISBN" ,b.series , b.number_in_series , b.publisher , b.publishing_date , b.title, array_agg(distinct (a.author)) as authors, array_agg(distinct (g.genre)) as genres 
-                                                    from lightlyburning.books b 
-                                                    natural join lightlyburning.books_authors ba 
-                                                    natural join lightlyburning.authors a
-                                                    natural join lightlyburning.books_genre bg
-                                                    natural join lightlyburning.genre g
-                                                    group by b.book_id;`)
-        return results.rows.map(ReimbursementDTOtoReimbursementConverter)
-    } catch (e) {
+// Update all for Reimbursements
+
+// Find all Users
+export async function getAllUsers(){
+    // Declare a Client
+    let client:PoolClient
+    try{
+        // Get a Connection
+        client = await connectionPool.connect()
+        // Send a Query
+        let results = await client.query(`select u.user_id, u.username , u."password" , u.first_name, u.last_name u.email ,r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
+        return results.rows.map(UserDTOtoUserConvertor) // Return rows
+    }catch(e){
+        // in case we get an error we don't know 
         console.log(e)
-        throw new Error('un-implemented error handling')
+        throw new Error('Unhandled Error Occured')
+    }finally{
+        // release connection back to the pool
+        client && client.release()
+    }
+}
+
+// get User by ID
+export async function getUserById(id: number):Promise<User> {
+    let client: PoolClient
+    try {
+        client = await connectionPool.connect()
+        let results = await client.query(`select u.user_id, 
+                u.username , 
+                u."password" ,
+                u.first_name,
+                u.last_name, 
+                u.email ,
+                r.role_id , 
+                r."role" 
+                from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
+                where u.user_id = $1;`,
+            [id])
+        if(results.rowCount === 0){
+            throw new Error('User Not Found')
+        }
+        return UserDTOtoUserConvertor(results.rows[0])
+    } catch (e) {
+        if(e.message === 'User Not Found'){
+            throw new UserNotFoundError()
+        } 
+        console.log(e)
+        throw new Error('Unhandled Error Occured')
     } finally {
         client && client.release()
     }
 }
 
-export async function findReimbursementById(id:number) {
-    let client: PoolClient;
-    try{
-        client = await connectionPool.connect() // update query below
-        let results: QueryResult = await client.query(`select b.book_id, b."pages", b.chapters, b."ISBN" ,b.series , b.number_in_series , b.publisher , b.publishing_date , b.title, array_agg(distinct (a.author)) as authors, array_agg(distinct (g.genre)) as genres 
-        from lightlyburning.books b 
-        natural join lightlyburning.books_authors ba 
-        natural join lightlyburning.authors a
-        natural join lightlyburning.books_genre bg
-        natural join lightlyburning.genre g
-        where b.book_id = ${id}
-        group by b.book_id;`)
 
+// login --> get user by username & password
+export async function getUserByUsernameAndPassword(username:string, password:string):Promise<User>{
+    let client: PoolClient
+    try {
+        client = await connectionPool.connect()
+        // send a query
+        let results = await client.query(`select u.user_id, 
+                u.username", 
+                u."password" ,
+                u.first_name ,
+                u.last_name , 
+                u.email ,
+                r.role_id , 
+                r."role" 
+                from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
+                where u."username" = $1 and u."password" = $2;`,
+            [username, password])
         if(results.rowCount === 0){
-            throw new Error('NotFound')
-        }else{
-            return ReimbursementDTOtoReimbursementConvertor(results.rows[0])
+            throw new UserNotFoundError()
         }
-    }catch(e){
-        if(e.message === 'NotFound'){
-            throw new ReimbursementNotFoundError()
+        return UserDTOtoUserConvertor(results.rows[0])
+    } catch (e) {
+        if(e.message === 'User Not Found'){
+            throw new LoginInvalidCredentialsError()
         }
+        // if fields are missing
         console.log(e)
-        throw new Error('un-implemented error handling')
-    }finally{
+        throw new AuthenticationError()
+    } finally {
+        // release the connectiopn back to the pool
         client && client.release()
     }
 }
