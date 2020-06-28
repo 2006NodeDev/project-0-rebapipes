@@ -2,6 +2,6 @@ import { HttpError } from "./HttpError";
 
 export class ReimbursementIdInputError extends HttpError{
     constructor(){
-        super(400, 'Reimbursement Id must be a number')
+        super(400, 'Reimbursement ID must be a number')
     }
 }

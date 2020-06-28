@@ -9,10 +9,10 @@ import { reimbursementAuthorRouter } from './reimbursementAuthor-router';
 
 export const reimbursementRouter = express.Router()
 
-// Reimbursement by Status lookup
+// Reimbursement by Status
 reimbursementRouter.use('/status', reimbursementStatusRouter);
 
-// Reimbursement by Author (User) lookup
+// Reimbursement by Author (User)
 reimbursementRouter.use('/author', reimbursementAuthorRouter);
 
 // Get all Reimbursements
@@ -48,7 +48,7 @@ reimbursementRouter.patch('/', (req:Request, res:Response, next:NextFunction)=>{
     if(!id){
         throw ReimbursementIdInputError
     }else if(isNaN(+id)){
-        res.status(400).send("Reimbursement Id must be a number");
+        res.status(400).send("Reimbursement ID must be a number");
     }else{
         let found = false;
         for(const reimbursement of reimbursements){
