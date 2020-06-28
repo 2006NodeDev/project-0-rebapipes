@@ -1,4 +1,4 @@
-import { PoolClient } from "pg";
+import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
 import { User } from "../models/User";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
@@ -15,7 +15,7 @@ export async function getAllUsers(){
         // Get a Connection
         client = await connectionPool.connect()
         // Send a Query
-        let results = await client.query(`select u.user_id, u.username , u."password" , u.first_name, u.last_name u.email ,r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
+        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email ,r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
         return results.rows.map(UserDTOtoUserConvertor) // Return rows
     }catch(e){
         // in case we get an error we don't know 
@@ -32,13 +32,13 @@ export async function getUserById(id: number):Promise<User> {
     let client: PoolClient
     try {
         client = await connectionPool.connect()
-        let results = await client.query(`select u.user_id, 
-                u.username , 
-                u."password" ,
-                u.first_name,
-                u.last_name, 
-                u.email ,
-                r.role_id , 
+        let results: QueryResult = await client.query(`select u.user_id, 
+                u.username, 
+                u."password",
+                u.firstName,
+                u.lastName, 
+                u.email,
+                r.role_id, 
                 r."role" 
                 from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
                 where u.user_id = $1;`,
@@ -65,7 +65,7 @@ export async function getUserByUsernameAndPassword(username:string, password:str
     try {
         client = await connectionPool.connect()
         // send a query
-        let results = await client.query(`select u.user_id, 
+        let results: QueryResult = await client.query(`select u.user_id, 
                 u.username", 
                 u."password" ,
                 u.first_name ,

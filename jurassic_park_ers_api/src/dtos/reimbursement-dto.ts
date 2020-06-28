@@ -1,11 +1,16 @@
+import { ReimbursementStatus } from "../models/ReimbursementStatus"
+import { ReimbursementType } from "../models/ReimbursementType"
+
 export class ReimbursementDTO {
-    reimbursementId: number // primary key
-        author: number  // foreign key -> User, not null
-        amount: number  // not null
-    dateSubmitted: number // not null
-    dateResolved: number // not null
-    description: string // not null
-    resolver: number // foreign key -> User
-    status: number // foreign key -> ReimbursementStatus, not null
-    type: number // foreign key -> ReimbursementType
+    reimbursement_id: number 
+        author: number  
+        amount: number 
+    dateSubmitted: number 
+    dateResolved: number 
+    description: string 
+    resolver: number 
+    status: ReimbursementStatus 
+    status_id: number
+    type: ReimbursementType
+    type_id: number
 }
