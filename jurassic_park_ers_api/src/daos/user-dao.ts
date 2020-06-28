@@ -7,6 +7,8 @@ import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsE
 import { AuthenticationError } from '../errors/AuthenticationError'
 import { AuthorizationError } from '../errors/AuthorizationError'
 
+// Write an export async function for 
+
 // Find all Users
 export async function getAllUsers(){
     // Declare a Client
@@ -15,7 +17,7 @@ export async function getAllUsers(){
         // Get a Connection
         client = await connectionPool.connect()
         // Send a Query
-        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email ,r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
+        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
         return results.rows.map(UserDTOtoUserConvertor) // Return rows
     }catch(e){
         // in case we get an error we don't know 
@@ -27,7 +29,7 @@ export async function getAllUsers(){
     }
 }
 
-// get User by ID
+// Get User(s) by ID
 export async function getUserById(id: number):Promise<User> {
     let client: PoolClient
     try {
@@ -44,7 +46,7 @@ export async function getUserById(id: number):Promise<User> {
                 where u.user_id = $1;`,
             [id])
         if(results.rowCount === 0){
-            throw new Error('User Not Found')
+            throw new UserNotFoundError()
         }
         return UserDTOtoUserConvertor(results.rows[0])
     } catch (e) {
@@ -58,8 +60,27 @@ export async function getUserById(id: number):Promise<User> {
     }
 }
 
+// Update User(s)
+export async function updateUser(){
+    // Declare a Client
+    let client:PoolClient
+    try{
+        // Get a Connection
+        client = await connectionPool.connect()
+        // Send a Query
+        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
+        return results.rows.map(UserDTOtoUserConvertor) // Return rows
+    }catch(e){
+        // User === updateUser
+        console.log(e)
+        throw new AuthorizationError()
+    }finally{
+        // release connection back to the pool
+        client && client.release()
+    }
+}
 
-// login --> get user by username & password
+// Login --> Get User by Username & Password
 export async function getUserByUsernameAndPassword(username:string, password:string):Promise<User>{
     let client: PoolClient
     try {

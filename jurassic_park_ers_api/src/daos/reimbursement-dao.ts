@@ -4,7 +4,6 @@ import { Reimbursement } from "../models/Reimbursement";
 import { ReimbursementDTOtoReimbursementConvertor } from "../utils/ReimbursementDTO-to-Reimbursement-converter";
 import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError";
 import { ReimbursementIdInputError } from "../errors/ReimbursementIdInputError";
-import { AuthenticationError } from '../errors/AuthenticationError'
 import { AuthorizationError } from '../errors/AuthorizationError'
 
 // Find Reimbursement by Status
@@ -13,93 +12,53 @@ import { AuthorizationError } from '../errors/AuthorizationError'
 // Find Reimbursement by Type
 // export async function getReimbursementByType(id: number):Promise<Reimbursement> {
 
-// Find Reimbursement by ID
-export async function getReimbursementById(id: number):Promise<Reimbursement> {
+// Find all Users
+export async function getAllUsers(){
+    // Declare a Client
+    let client:PoolClient
+    try{
+        // Get a Connection
+        client = await connectionPool.connect()
+        // Send a Query
+        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
+        return results.rows.map(UserDTOtoUserConvertor) // Return rows
+    }catch(e){
+        // in case we get an error we don't know 
+        console.log(e)
+        throw new Error('Unhandled Error Occured')
+    }finally{
+        // release connection back to the pool
+        client && client.release()
+    }
+}
+
+// Get User by ID
+export async function getUserById(id: number):Promise<User> {
     let client: PoolClient
     try {
         client = await connectionPool.connect()
-        let results: QueryResult = await client.query(`select r.reimbursement_id, 
-                r.author, 
-                r.amount,
-                r.dateSubmitted,
-                r.dateResolved, 
-                r.description,
-                r.resolver,
-                s.status_id, 
-                s."ReimbursementStatus"
-                t.type_id, 
-                t."ReimbursementType"
-                from jurassicpark.reimbursements u left join jurassicpark.statuses r on u."status" = r.status_id 
-                from jurassicpark.reimbursements u left join jurassicpark.types r on u."type" = r.type_id 
-                where u.reimbursement_id = $1;`,
+        let results: QueryResult = await client.query(`select u.user_id, 
+                u.username, 
+                u."password",
+                u.firstName,
+                u.lastName, 
+                u.email,
+                r.role_id, 
+                r."role" 
+                from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
+                where u.user_id = $1;`,
             [id])
         if(results.rowCount === 0){
-            throw new Error('Reimbursement Not Found')
+            throw new Error('User Not Found')
         }
-        return ReimbursementDTOtoReimbursementConvertor(results.rows[0])
+        return UserDTOtoUserConvertor(results.rows[0])
     } catch (e) {
-        if(e.message === 'Reimbursement Not Found'){
-            throw new ReimbursementNotFoundError()
+        if(e.message === 'User Not Found'){
+            throw new UserNotFoundError()
         } 
         console.log(e)
         throw new Error('Unhandled Error Occured')
     } finally {
         client && client.release()
-    }
-}
-
-// lightly burning model
-
-export async function findbookById(id:number) {
-    let client: PoolClient;
-    try{
-        //id = '1 or 1 = 1; drop table lightlyburning.books cascade; select * from lightlyburning.book '
-        client = await connectionPool.connect()
-        let results: QueryResult = await client.query(`select b.book_id, b."pages", b.chapters, b."ISBN" ,b.series , b.number_in_series , b.publisher , b.publishing_date , b.title, array_agg(distinct (a.author)) as authors, array_agg(distinct (g.genre)) as genres 
-        from lightlyburning.books b 
-        natural join lightlyburning.books_authors ba 
-        natural join lightlyburning.authors a
-        natural join lightlyburning.books_genre bg
-        natural join lightlyburning.genre g
-        where b.book_id = ${id}
-        group by b.book_id;`)//directly inputting user values is very dangerous
-        //sql injction which is very bad, we will learn how to fix with a parameterized query
-        if(results.rowCount === 0){
-            throw new Error('NotFound')
-        }else{
-            return BookDTOtoBookConvertor(results.rows[0])
-        }
-    }catch(e){
-        //some real error handling
-        if(e.message === 'NotFound'){
-            throw new BookNotFoundError()
-        }
-        console.log(e)
-        throw new Error('un-implemented error handling')
-    }finally{
-        client && client.release()
-    }
-}
-
-export async function getAllBooks() {
-    let client: PoolClient;// this will be the "connection" we borrow from the pool but 
-    //that process can take some time and can fail so we declare the var ahead of time
-    try {
-        client = await connectionPool.connect()
-        let results: QueryResult = await client.query(`select b.book_id, b."pages", b.chapters, b."ISBN" ,b.series , b.number_in_series , b.publisher , b.publishing_date , b.title, array_agg(distinct (a.author)) as authors, array_agg(distinct (g.genre)) as genres 
-                                                    from lightlyburning.books b 
-                                                    natural join lightlyburning.books_authors ba 
-                                                    natural join lightlyburning.authors a
-                                                    natural join lightlyburning.books_genre bg
-                                                    natural join lightlyburning.genre g
-                                                    group by b.book_id;`)
-        return results.rows.map(BookDTOtoBookConvertor)
-    } catch (e) {
-        //we should do some sort of error processing in this catch statement
-        console.log(e)
-        throw new Error('un-implemented error handling')
-    } finally {
-        // we make sure client isn't undefined
-        client && client.release()//then we release it
     }
 }
