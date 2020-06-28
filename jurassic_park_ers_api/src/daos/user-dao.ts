@@ -22,7 +22,7 @@ export async function getAllUsers(){
     }catch(e){
         // in case we get an error we don't know 
         console.log(e)
-        throw new Error('Unhandled Error Occured')
+        throw new Error('Unable to Retrieve Users')
     }finally{
         // release connection back to the pool
         client && client.release()
@@ -39,9 +39,9 @@ export async function getUserById(id: number):Promise<User> {
                 u."password",
                 u.firstName,
                 u.lastName, 
-                u.email,
-                r.role_id, 
-                r."role" 
+                u.email, 
+                u."role",
+                r.role_id,
                 from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
                 where u.user_id = $1;`,
             [id])
@@ -54,7 +54,7 @@ export async function getUserById(id: number):Promise<User> {
             throw new UserNotFoundError()
         } 
         console.log(e)
-        throw new Error('Unhandled Error Occured')
+        throw new Error('Unable to Retrieve User')
     } finally {
         client && client.release()
     }
@@ -73,7 +73,7 @@ export async function updateUser(){
     }catch(e){
         // User === updateUser
         console.log(e)
-        throw new AuthorizationError()
+        throw new AuthorizationError() // Not Authorized to Update User(s)
     }finally{
         // release connection back to the pool
         client && client.release()
