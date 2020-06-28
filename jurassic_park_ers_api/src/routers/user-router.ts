@@ -1,9 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { User, Role } from '../models/User'
-import { authenticationMiddleware } from '../middleware/authentication-middleware'
-import { getAllUsers, getUserById, saveOneUser } from '../daos/user-dao'
-import { authorizationMiddleware } from '../middleware/authorization-middleware'
-import { UserUserInputError } from '../errors/LoginUserInputError'
+import {authenticationMiddleware} from '../middleware/authentication-middleware'
+import {authorizationMiddleware} from '../middleware/authorization-middleware'
+import { getAllUsers, getUserById } from '../daos/user-dao'
 
 export const userRouter = express.Router()
 
@@ -12,12 +11,12 @@ userRouter.get('/', (req:Request,res:Response,next:NextFunction)=>{
     res.json(users)
 })
 
-// Users by ID
+// Get Users by ID
 userRouter.get('/:id', (req:Request, res:Response)=>{
     let {id} = req.params
     if(isNaN(+id)){
         
-        res.status(400).send('ID must be a number')
+        res.status(400).send('Invalid Credentials')
     } else {
         let found = false
         for(const user of users){
@@ -39,8 +38,8 @@ userRouter.patch('/', (req:Request, res:Response, next:NextFunction)=>{
     if(!id){
         throw res.status(404).send('User Not Found')
     }else if(isNaN(+id)){
-        res.status(400).send("User ID must be a number");
-    }else{
+        res.status(400).send("Invalid Credentials");
+    }else {
         let found = false;
         for(const user of users){
             if(user.userId === +id){
@@ -79,7 +78,6 @@ userRouter.patch('/', (req:Request, res:Response, next:NextFunction)=>{
             res.status(404).send('User Not Found')
         }
     }
-
 })
 
 export let users:User[] =[

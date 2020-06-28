@@ -35,7 +35,7 @@ export async function getAllReimbursements() {
     }
 }
 
-export async function findreimbursementById(id:number) {
+export async function findReimbursementById(id:number) {
     let client: PoolClient;
     try{
         client = await connectionPool.connect() // update query below

@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { Reimbursement, ReimbursementStatus, ReimbursementType } from "../models/Reimbursement";
-import { ReimbursementUserInputError } from '../errors/UserReimbursementInputError'
+import { UserReimbursementInputError } from '../errors/UserReimbursementInputError'
 import { ReimbursementIdInputError } from '../errors/ReimbursementIdInputError'
-import { getAllReimbursements, findreimbursementById } from '../daos/reimbursement-dao'
+import { getAllReimbursements, findReimbursementById } from '../daos/reimbursement-dao'
 import { ReimbursementNotFoundError } from '../errors/ReimbursementNotFoundError';
 import { reimbursementStatusRouter } from './reimbursementStatus-router';
 import { reimbursementAuthorRouter } from './reimbursementAuthor-router';
