@@ -9,7 +9,7 @@ export class User{
   }
 
   export class Role {
-    roleId: number // primary Key
+    role_id: number // primary Key
     role: string // not null, unique
   }
   

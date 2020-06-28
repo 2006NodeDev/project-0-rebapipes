@@ -11,11 +11,11 @@ export class Reimbursement {
 }
 
 export class ReimbursementStatus {
-  statusId: number // primary key
+  status_id: number // primary key
   status: string // not null, unique
 }
 
 export class ReimbursementType {
-  typeId: number // primary key
+  type_id: number // primary key
   type: string // not null, unique
 }

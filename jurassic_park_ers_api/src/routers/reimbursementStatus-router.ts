@@ -5,16 +5,16 @@ import { reimbursements } from './reimbursement-router';
 export const reimbursementStatusRouter = express.Router()
 
 // Get Reimbursement by Status
-reimbursementStatusRouter.get('/:statusId', (req:Request, res:Response)=>{
-    let {statusId} = req.params
-    if(isNaN(+statusId)){
+reimbursementStatusRouter.get('/:status_id', (req:Request, res:Response)=>{
+    let {status_id} = req.params
+    if(isNaN(+status_id)){
         res.status(400).send('ID must be a number')
     } else {
         let found = false
         let found_reimbursements = []
 
         reimbursements.forEach(reimbursement => {
-            if (reimbursement.status === +statusId) {
+            if (reimbursement.status === +status_id) {
                 found_reimbursements.push(reimbursement)
                 res.json(reimbursement)
                 found = true 

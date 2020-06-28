@@ -21,7 +21,7 @@ The User model keeps track of users information.
 The Role model is used to track what permissions a user has
 ```javascript
 {
-  roleId: number, // primary key
+  role_id: number, // primary key
   role: string // not null, unique
 }
 ```
@@ -47,7 +47,7 @@ The Reimbursement model is used to represent a single reimbursement that an empl
 The ReimbursementStatus model is used to track the status of reimbursements. Status possibilities are `Pending`, `Approved`, or `Denied`.
 ```javascript
 {
-  statusId: number, // primary key
+  status_id: number, // primary key
   status: string // not null, unique
 }
 ```
@@ -56,7 +56,7 @@ The ReimbursementStatus model is used to track the status of reimbursements. Sta
 The ReimbursementType model is used to track what kind of reimbursement is being submitted. Type possibilities are `Lodging`, `Travel`, `Food`, or `Other`.
 ```javascript
 {
-  typeId: number, // primary key
+  type_id: number, // primary key
   type: string, // not null, unique
 }
 ```
@@ -160,7 +160,7 @@ The ReimbursementType model is used to track what kind of reimbursement is being
 ### **Find Reimbursements By Status**  
 Reimbursements should be ordered by date
 * **URL**
-  `/reimbursements/status/:statusId`  
+  `/reimbursements/status/:status_id`  
   For a challenge you could do this instead:  
   `/reimbursements/status/:statudId/date-submitted?start=:startDate&end=:endDate`
 

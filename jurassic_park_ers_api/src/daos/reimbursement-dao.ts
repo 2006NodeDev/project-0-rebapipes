@@ -18,19 +18,19 @@ export async function getReimbursementById(id: number):Promise<Reimbursement> {
     let client: PoolClient
     try {
         client = await connectionPool.connect()
-        let results: QueryResult = await client.query(`select u.reimbursement_id, 
-                u.author, 
-                u.amount,
-                u.dateSubmitted,
-                u.dateResolved, 
-                u.description,
-                u.resolver,
-                r.status_id, 
-                r."reimbursement_status"
-                r.type_id, 
-                r."reimbursement_type"
-                from jurassicpark.reimbursements u left join jurassicpark.statuses r on u."reimbursement_status" = r.status_id 
-                from jurassicpark.reimbursements u left join jurassicpark.types r on u."reimbursement_type" = r.type_id 
+        let results: QueryResult = await client.query(`select r.reimbursement_id, 
+                r.author, 
+                r.amount,
+                r.dateSubmitted,
+                r.dateResolved, 
+                r.description,
+                r.resolver,
+                s.status_id, 
+                s."ReimbursementStatus"
+                t.type_id, 
+                t."ReimbursementType"
+                from jurassicpark.reimbursements u left join jurassicpark.statuses r on u."status" = r.status_id 
+                from jurassicpark.reimbursements u left join jurassicpark.types r on u."type" = r.type_id 
                 where u.reimbursement_id = $1;`,
             [id])
         if(results.rowCount === 0){

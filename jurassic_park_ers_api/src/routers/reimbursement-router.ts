@@ -212,34 +212,34 @@ export let reimbursements:Reimbursement[] = [
 
 export let reimbursementStatus: ReimbursementStatus[] = [
     {
-        statusId: 1,
+        status_id: 1,
         status: 'Pending'
     },
     {
-        statusId: 2,
+        status_id: 2,
         status: 'Approved'
     },
     {
-        statusId: 3,
+        status_id: 3,
         status: 'Denied'
     }
 ]
 
 export let reimbursementType: ReimbursementType[] = [
     {
-        typeId: 1,
+        type_id: 1,
         type: 'Maintenance'
     },
     {
-        typeId: 2,
+        type_id: 2,
         type: 'Inventory'
     },
     {
-        typeId: 3,
+        type_id: 3,
         type: 'Food'
     },
     {
-        typeId: 4,
+        type_id: 4,
         type: 'Payroll'
     }
 ]
