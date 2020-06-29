@@ -1,4 +1,4 @@
 export class ReimbursementStatus {
-    status_Id: number // primary key
+    statusId: number // primary key
     status: string // not null, unique
 }

@@ -9,13 +9,3 @@ export class Reimbursement {
     status: number // foreign key -> ReimbursementStatus, not null
     type: number // foreign key -> ReimbursementType
 }
-
-export class ReimbursementStatus {
-  status_id: number // primary key
-  status: string // not null, unique
-}
-
-export class ReimbursementType {
-  type_id: number // primary key
-  type: string // not null, unique
-}

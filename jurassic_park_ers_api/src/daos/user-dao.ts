@@ -7,7 +7,7 @@ import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsE
 import { AuthenticationError } from '../errors/AuthenticationError'
 import { AuthorizationError } from '../errors/AuthorizationError'
 
-// Write an export async function for 
+// Write an export async function for update Users
 
 // Find all Users
 export async function getAllUsers(){
