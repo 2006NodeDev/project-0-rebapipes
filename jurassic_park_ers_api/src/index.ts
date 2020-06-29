@@ -58,6 +58,6 @@ app.use((err, req, res, next) =>{
     }
 })
 
-app.listen(2006, () => {
+app.listen(3030, () => {
     console.log("Server Is Running");
 })
