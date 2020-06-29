@@ -103,13 +103,43 @@ export async function getUserByUsernameAndPassword(username:string, password:str
         return UserDTOtoUserConvertor(results.rows[0])
     } catch (e) {
         if(e.message === 'User Not Found'){
-            throw new LoginInvalidCredentialsError()
+            throw new AuthenticationError()
         }
         // if fields are missing
         console.log(e)
-        throw new AuthenticationError()
+        throw new LoginInvalidCredentialsError()
     } finally {
-        // release the connectiopn back to the pool
+        // release the connection back to the pool
         client && client.release()
+    }
+}
+
+// Save User(s)
+export async function saveOneUser(newUser:User):Promise<User>{
+    let client:PoolClient
+    try{
+        client = await connectionPool.connect()
+        await client.query('BEGIN;')
+        let roleId = await client.query(`select r."role_id" from jurassicpark.roles r where r."role" = $1`, [newUser.role])
+        if(roleId.rowCount === 0){
+            throw new Error('Role Not Found')
+        }
+        roleId = roleId.rows[0].role_id
+        let results = await client.query(`insert into jurassicpark.users ("username", "password","email", "firstName, "lastName", role")
+                                            values($1,$2,$3,$4) returning "user_id" `,
+                                            [newUser.username, newUser.password, newUser.firstName, newUser.lastName, newUser.email, roleId])
+        newUser.userId = results.rows[0].user_id
+        await client.query('COMMIT;')
+        return newUser
+
+    }catch(e){
+        client && client.query('ROLLBACK;')
+        if(e.message === 'Role Not Found'){
+            throw new UserNotFoundError()
+        }
+        console.log(e)
+        throw new Error('Unable to Create or Save User')
+    }finally{
+        client && client.release();
     }
 }

@@ -21,27 +21,20 @@ app.use(loggingMiddleware)
 
 app.use(sessionMiddleware)
 
-//app.use(authorizationMiddleware)
-
-//app.use(authenticationMiddleware)
-
 app.use('/users', userRouter)
 
 app.use('/reimbursements', reimbursementRouter)
 
+// Login
 app.post('/login', async (req:Request, res:Response, next:NextFunction)=>{
-    // you could use destructuring, see ./routers/book-router
     let username = req.body.username
     let password = req.body.password
-    // if I didn't get a usrname/password send an error and say give me both fields
     if(!username || !password){
-        // make a custom http error and throw it or just send a res
         throw new LoginInvalidCredentialsError()
     } else {
         try{
             let user = await getUserByUsernameAndPassword(username, password)
-            req.session.user = user// need to remeber to add their user data to the session
-            // so we can use that data in other requests
+            req.session.user = user
             res.json(user)
         }catch(e){
             next(e)
@@ -49,13 +42,13 @@ app.post('/login', async (req:Request, res:Response, next:NextFunction)=>{
     }
 })
 
-app.use((err, req, res, next) =>{
-    if (err.StatusCode){
-        res.status(err.StatusCode).send(err.message)
-    }else{
-        console.log(err)
-        res.status(500).send('Oops, Something Went Wrong')
-    }
+app.use((err, req, res, next) => {
+  if (err.statusCode) {
+    res.status(err.statusCode).send(err.message);
+  } else {
+    console.log(err); 
+    res.status(500).send("Oops, Something went wrong");
+  }
 })
 
 app.listen(3030, () => {
