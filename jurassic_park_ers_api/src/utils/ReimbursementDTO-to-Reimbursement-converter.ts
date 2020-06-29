@@ -1,9 +1,7 @@
 import { ReimbursementDTO } from "../dtos/reimbursement-dto";
 import { Reimbursement } from "../models/Reimbursement";
 
-export function ReimbursementDTOtoReimbursementConvertor(
-  r: ReimbursementDTO
-): Reimbursement {
+export function ReimbursementDTOtoReimbursementConvertor(r: ReimbursementDTO): Reimbursement {
   return {
     reimbursementId: r.reimbursement_id,
     author: r.author,
