@@ -62,7 +62,7 @@ export async function getReimbursementById(id: number):Promise<Reimbursement> {
 }
 
 // Get Reimbursement by Status
-export async function getReimbursementByStatus(id: number):Promise<Reimbursement> {
+export async function findReimbursementByStatus(id: number):Promise<Reimbursement> {
     let client: PoolClient
     try {
         client = await connectionPool.connect()
