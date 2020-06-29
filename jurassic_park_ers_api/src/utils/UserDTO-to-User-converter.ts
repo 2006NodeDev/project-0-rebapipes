@@ -1,18 +1,14 @@
-import { ReimbursementDTO } from "../dtos/reimbursement-dto";
-import { Reimbursement } from "../models/Reimbursement";
+import { UserDTO } from "../dtos/user-dto";
+import { User } from "../models/User";
 
-export function ReimbursementDTOtoReimbursementConvertor(
-  r: ReimbursementDTO
-): Reimbursement {
+export function UserDTOtoUserConvertor(udto: UserDTO): User {
   return {
-    reimbursementId: r.reimbursement_id,
-    author: r.author,
-    amount: r.amount,
-    dateSubmitted: r.date_submitted.getFullYear(),
-    dateResolved: r.date_resolved.getFullYear(),
-    description: r.description,
-    resolver: r.resolver,
-    status: r.status,
-    type: r.type,
+    userId: udto.user_id,
+    username: udto.username,
+    password: udto.password,
+    firstName: udto.firstName,
+    lastName: udto.lastName,
+    email: udto.email,
+    role: udto.role,
   };
 }
