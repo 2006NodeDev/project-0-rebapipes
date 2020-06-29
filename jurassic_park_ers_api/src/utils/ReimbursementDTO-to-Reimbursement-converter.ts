@@ -1,16 +1,18 @@
 import { ReimbursementDTO } from "../dtos/reimbursement-dto";
 import { Reimbursement } from "../models/Reimbursement";
 
-export function ReimbursementDTOtoReimbursementConvertor( udto:ReimbursementDTO):Reimbursement{
-    return {
-        reimbursementId:udto.reimbursement_id, // primary key
-            author: udto.author,  // foreign key -> User, not null
-            amount: udto.amount,  // not null
-        dateSubmitted: udto.dateSubmitted, // not null
-        dateResolved: udto.dateResolved, // not null
-        description: udto.description, // not null
-        resolver: udto.resolver, // foreign key -> User
-        status: udto.ReimbursementStatus, // foreign key -> ReimbursementStatus, not null
-        type: udto.ReimbursemenType, // foreign key -> ReimbursementType
-    }
+export function ReimbursementDTOtoReimbursementConvertor(
+  r: ReimbursementDTO
+): Reimbursement {
+  return {
+    reimbursementId: r.reimbursement_id,
+    author: r.author,
+    amount: r.amount,
+    dateSubmitted: r.date_submitted.getFullYear(),
+    dateResolved: r.date_resolved.getFullYear(),
+    description: r.description,
+    resolver: r.resolver,
+    status: r.status,
+    type: r.type,
+  };
 }
