@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node", "jest"],
+    "types": ["node"],
     "outDir": "build/dist",
     "module": "commonjs",
     "target": "es5",
@@ -9,16 +9,14 @@
     "allowJs": true,
     "moduleResolution": "node",
     "rootDir": "src",
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
     "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "esModuleInterop": true,
-    "baseUrl": ".",
-    
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",
@@ -27,6 +25,8 @@
     "styleguide.config.js",
     "docs",
     "acceptance-tests",
-    "webpack"
+    "webpack",
+    "jest",
+    "src/**/*.test.ts"
   ]
 }
