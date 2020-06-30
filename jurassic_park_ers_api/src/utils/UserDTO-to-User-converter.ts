@@ -1,5 +1,5 @@
 import { User } from "../models/User";
-import { UserDTO } from "../dto/user-dto";
+import { UserDTO } from "../dtos/user-dto";
 
 export function UserDTOtoUserConverter( udto:UserDTO ):User{
     return {
@@ -10,7 +10,7 @@ export function UserDTOtoUserConverter( udto:UserDTO ):User{
         lastName: udto.last_name, 
         email: udto.email, 
         role:{ 
-            role:udto.role_name, 
+            role:udto.role, 
             roleId:udto.role_id 
         }
     }
