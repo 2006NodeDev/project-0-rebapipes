@@ -9,7 +9,7 @@
     "allowJs": true,
     "moduleResolution": "node",
     "rootDir": "src",
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
