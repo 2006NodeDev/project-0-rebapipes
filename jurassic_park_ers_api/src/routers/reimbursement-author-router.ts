@@ -1,22 +1,22 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { authorizationMiddleware } from '../middleware/authorization-middleware';
-import { getReimbursementsByUser } from '../dao/reimbursement-author-dao';
+import { getReimbursementByUserId } from '../daos/reimbursement-dao';
+//import { authorizationMiddleware } from '../middleware/authorization-middleware';
 
 export const reimbursementAuthorRouter = express.Router();
 
-// Get Reimbursement by Author (User)
+// Get Reimbursement by User Id
 
-reimbursementAuthorRouter.get('/:userId', authorizationMiddleware(['admin', 'finance-manager', 'current']), async (req:Request, res:Response, next:NextFunction)=>{
-    let {userId} = req.params;
-
-    if(isNaN(+userId)){
-        res.status(400).send("Id must be a number")
-    }else {
+reimbursementAuthorRouter.get('/:userId', async (req:Request, res:Response, next:NextFunction) => {
+    let { userId } = req.params
+    if(isNaN(+userId)) {
+        res.status(400).send('UserId Needs to be a Number')
+    }
+    else { 
         try {
-            let reimbursement = await getReimbursementsByUser(+userId);
-            res.json(reimbursement);
-        } catch (error) {
-            next(error);
+            let reimByUserId = await getReimbursementByUserId(+userId)
+            res.json(reimByUserId)
+        } catch (e) {
+            next(e)
         }
     }
-});
+})
