@@ -4,7 +4,7 @@ import { connectionPool } from ".";
 import { ReimbursementDTOtoReimbursementConverter } from "../util/ReimbursementDTO-to-Reimbursement-converter";
 import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError"
 //import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError"
-//import { UserReimbursementInputError } from "../errors/UserReimbursementInputError"
+//import { UserInputError } from "../errors/UserInputError"
 
 // Get Reimbursements by Status
 

@@ -3,7 +3,7 @@ import { connectionPool } from ".";
 import { Reimbursement } from "../models/Reimbursement";
 import { ReimbursementDTOtoReimbursementConverter } from "../utils/ReimbursementDTO-to-Reimbursement-converter";
 import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError";
-//import { UserReimbursementInputError } from "../errors/UserReimbursementInputError";
+//import { UserInputError } from "../errors/UserInputError";
 //import { ReimbursementIdInputError } from "../errors/ReimbursementIdInputError";
 //import { AuthorizationError } from '../errors/AuthorizationError'
 
