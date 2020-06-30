@@ -3,6 +3,7 @@ import { authenticationMiddleware } from '../middleware/authentication-middlewar
 import { authorizationMiddleware } from '../middleware/authorization-middleware';
 import { getAllUsers, getUserById, updateUser, saveOneUser } from '../daos/user-dao'
 import { User } from '../models/User'
+import { UserInputError } from "../errors/UserInputError";
 
 export const userRouter = express.Router();
 
@@ -76,7 +77,7 @@ userRouter.patch('/', authorizationMiddleware(['admin']), async (req:Request, re
     }
 }) 
 
-//Create New Users
+// Save (Create) User
 
 userRouter.post('/', async (req:Request, res:Response, next:NextFunction) => {
     console.log(req.body);

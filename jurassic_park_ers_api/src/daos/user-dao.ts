@@ -105,7 +105,7 @@ export async function updateUser(updatedUser:User):Promise<User>{
     }
 }
 
-// Save User
+// Save (Create) User
 
 export async function saveOneUser(newUser:User):Promise<User> {
     let client:PoolClient
