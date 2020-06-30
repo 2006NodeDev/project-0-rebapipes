@@ -2,143 +2,104 @@ import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
 import { User } from "../models/User";
 import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
-import { UserNotFoundError } from "../errors/UserNotFoundError";
-import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsError";
-import { AuthenticationError } from '../errors/AuthenticationError'
-import { AuthorizationError } from '../errors/AuthorizationError'
+import { AuthenticationError } from '../errors/AuthenticationError';
+import { UserNotFoundError } from "../errors/UserNotFoundError"
+//import { AuthorizationError } from '../errors/AuthorizationError';
+//import { UserNotFoundError } from "../errors/UserNotFoundError";
+//import { LoginInvalidCredentialsError } from "../errors/LoginInvalidCredentialsError"
 
-// Write an export async function for update Users
-
-// Find all Users
-export async function getAllUsers(){
-    // Declare a Client
-    let client:PoolClient
-    try{
-        // Get a Connection
-        client = await connectionPool.connect()
-        // Send a Query
-        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id;`)
-        return results.rows.map(UserDTOtoUserConvertor) // Return rows
-    }catch(e){
-        // in case we get an error we don't know 
-        console.log(e)
-        throw new Error('Unable to Retrieve Users')
-    }finally{
-        // release connection back to the pool
-        client && client.release()
-    }
-}
-
-// Get User(s) by ID
-export async function getUserById(id: number):Promise<User> {
-    let client: PoolClient
+// Get all Users
+export async function getAllUsers():Promise<User[]>{
+    let client:PoolClient;
     try {
-        client = await connectionPool.connect()
-        let results: QueryResult = await client.query(`select u.user_id, 
-                u.username, 
-                u."password",
-                u.firstName,
-                u.lastName, 
-                u.email, 
-                u."role",
-                r.role_id,
-                from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id 
-                where u.user_id = $1;`,
-            [id])
-        if(results.rowCount === 0){
-            throw new UserNotFoundError()
+        client = await connectionPool.connect();
+        let results:QueryResult = await client.query(`select u.user_id, u.username, u.password, u.first_name, u.last_name, u.email, r.role_id, r."role" 
+                                                        from jurassic_park_ers_api.users u
+                                                        join jurassic_park_ers_api.roles r on u."role" = r.role_id
+                                                        group by u.user_id, u.username, u.first_name, u.last_name, u.email, r.role_id, r."role"
+                                                        order by u.user_id;`);
+        
+        if (results.rowCount === 0){
+            throw new Error('No Users Found');
         }
-        return UserDTOtoUserConvertor(results.rows[0])
-    } catch (e) {
-        if(e.message === 'User Not Found'){
-            throw new UserNotFoundError()
-        } 
-        console.log(e)
-        throw new Error('Unable to Retrieve User')
+        return results.rows.map(UserDTOtoUserConvertor);
+        
+    } catch (error) {
+        if (error.message === "User Not Found"){
+            console.log(error);
+            throw new Error(error.message);
+        }
+        throw new Error('An Unknown Error Occurred');
     } finally {
-        client && client.release()
+        client && client.release();
     }
 }
 
-// Update User(s)
-export async function updateOneUser(){
-    // Declare a Client
-    let client:PoolClient
-    try{
-        // Get a Connection
-        client = await connectionPool.connect()
-        // Send a Query
-        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id;`)
-        return results.rows.map(UserDTOtoUserConvertor) // Return rows
-    }catch(e){
-        // User === updateOneUser
-        console.log(e)
-        throw new AuthorizationError() // Not Authorized to Update User(s)
-    }finally{
-        // release connection back to the pool
-        client && client.release()
-    }
-}
+// Get User by Username & Password
 
-// Login --> Get User by Username & Password
-export async function getUserByUsernameAndPassword(username:string, password:string):Promise<User>{
-    let client: PoolClient
+export async function getUserByUserNameAndPassword(username:string, password:string):Promise<User>{
+    let client:PoolClient;
     try {
-        client = await connectionPool.connect()
-        // send a query
-        let results: QueryResult = await client.query(`select u.user_id, 
-                u.username", 
-                u."password" ,
-                u.first_name ,
-                u.last_name , 
-                u.email ,
-                r.role_id , 
-                r."role" 
-                from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id 
-                where u."username" = $1 and u."password" = $2;`,
-            [username, password])
-        if(results.rowCount === 0){
-            throw new UserNotFoundError()
+        client = await connectionPool.connect();
+        let results = await client.query(`select u.user_id, u.username, u.password, u.first_name, u.last_name, u.email, r.role_id, r."role" 
+                                            from jurassic_park_ers_api.users u
+                                            join jurassic_park_ers_api.roles r on u."role" = r.role_id
+                                            where u."username" = $1 and u."password" = $2
+                                            group by u.user_id, u.username, u.first_name, u.last_name, u.email, r.role_id, r."role"`,
+                                            [username, password]); // paramaterized queries, pg auto sanitizes
+
+        if (results.rowCount === 0){
+            throw new Error('User Not Found');
         }
-        return UserDTOtoUserConvertor(results.rows[0])
-    } catch (e) {
-        if(e.message === 'User Not Found'){
-            throw new AuthenticationError()
-        }
-        // if fields are missing
-        console.log(e)
-        throw new LoginInvalidCredentialsError()
-    } finally {
-        // release the connection back to the pool
-        client && client.release()
+        return UserDTOtoUserConvertor(results.rows[0]);
+        
+    } catch (error) {
+        throw new AuthenticationError();
+    } finally{
+        client && client.release();
     }
 }
 
-// Save User(s)
-export async function saveOneUser(newUser:User):Promise<User>{
+// Get Users by Id
+
+export async function getUsersById(id:number):Promise<User>{
+    let client:PoolClient;
+    try {
+        client = await connectionPool.connect();
+        let results:QueryResult = await client.query(`select u.user_id, u.username, u.password, u.first_name, u.last_name, u.email, r.role_id, r."role" 
+        from jurassic_park_ers_api.users u
+        join jurassic_park_ers_api.roles r on u."role" = r.role_id
+        where u.user_id = $1`, [id]); // parameterized queries
+
+        return UserDTOtoUserConvertor(results.rows[0]);
+
+    } catch (error) {
+        if (error.message === "User Not Found"){
+            console.log(error);
+            throw new UserNotFoundError()
+        }
+        throw new Error('An Unknown Error Occurred');
+    } finally {
+        client && client.release();
+    }
+}
+
+// Update User
+
+export async function updateOneUser(updatedUser:User):Promise<User>{
     let client:PoolClient
     try{
         client = await connectionPool.connect()
-        await client.query('BEGIN;')
-        let roleId = await client.query(`select r."role_id" from jurassic_park_ers_api.roles r where r."role" = $1`, [newUser.role])
-        if(roleId.rowCount === 0){
-            throw new Error('Role Not Found')
-        }
-        roleId = roleId.rows[0].role_id
-        let results = await client.query(`insert into jurassic_park_ers_api.users ("username", "password","email", "firstName, "lastName", role")
-                                            values($1,$2,$3,$4) returning "user_id" `,
-                                            [newUser.username, newUser.password, newUser.firstName, newUser.lastName, newUser.email, roleId])
-        newUser.userId = results.rows[0].user_id
-        await client.query('COMMIT;')
-        return newUser
+
+        await client.query(`update jurassic_park_ers_api.users 
+                                            set "username" = $1, "password" = $2, "first_name" = $3, "last_name" = $4, "email" = $5, "role" = $6
+                                            where user_id = $7 returning "user_id" `,
+                                            [updatedUser.username, updatedUser.password, updatedUser.firstName, updatedUser.lastName, updatedUser.email, updatedUser.role.roleId, updatedUser.userId])
+        return getUsersById(updatedUser.userId);
 
     }catch(e){
-        client && client.query('ROLLBACK;')
-        if(e.message === 'Role Not Found'){
-            throw new UserNotFoundError()
-        }
         console.log(e)
-        throw new Error('Unable to Create or Save User')
+        throw new Error('An Unknown Error Occurred')
     }finally{
         client && client.release();
     }

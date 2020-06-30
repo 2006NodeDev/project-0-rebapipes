@@ -3,15 +3,18 @@ import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
 import { ReimbursementDTOtoReimbursementConverter } from "../util/ReimbursementDTO-to-Reimbursement-converter";
 import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError"
-import { UserReimbursementInputError } from "../errors/UserReimbursementInputError"
+//import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError"
+//import { UserReimbursementInputError } from "../errors/UserReimbursementInputError"
+
+// Get Reimbursements by Status
 
 export async function getReimbursementsByStatus(id:number):Promise<Reimbursement[]>{
     let client:PoolClient;
     try {
         client = await connectionPool.connect();
-        let results:QueryResult = await client.query(`select r.*, rs.status, rs."status_id", rt."type", rt."type_id" from ers.reimbursement r
-                                                        join ers.reimbursement_status rs on r.status = rs.status_id
-                                                        join ers.reimbursement_type rt on r."type" = rt.type_id
+        let results:QueryResult = await client.query(`select r.*, rs.status, rs."status_id", rt."type", rt."type_id" from jurassic_park_ers_api.reimbursement r
+                                                        join jurassic_park_ers_api.reimbursement_status rs on r.status = rs.status_id
+                                                        join jurassic_park_ers_api.reimbursement_type rt on r."type" = rt.type_id
                                                         where r."status" = $1
                                                         order by r.date_submitted;`, [id]);
         if (results.rowCount === 0){
@@ -23,7 +26,7 @@ export async function getReimbursementsByStatus(id:number):Promise<Reimbursement
             console.log(error);
             throw new ReimbursementNotFoundError()
         }
-        throw new UserReimbursementInputError()
+        throw new Error('An Unknown Error Occurred');
     } finally {
         client && client.release();
     }

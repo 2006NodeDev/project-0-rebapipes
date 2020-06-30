@@ -3,35 +3,18 @@ import { Reimbursement } from "../models/Reimbursement";
 import { ReimbursementStatus } from "../models/ReimbursementStatus";
 import { ReimbursementType } from "../models/ReimbursementType";
 
-export function ReimbursementDTOtoReimbursementConvertor(rdto: ReimbursementDTO): Reimbursement {
+export function ReimbursementDTOtoReimbursementConverter(rto: ReimbursementDTO): Reimbursement {
+  let status:ReimbursementStatus = ({ statusId:rto.status_id, status:rto.status });
+  let type:ReimbursementType = ({ typeId:rto.type_id, type:rto.type });
   return {
-    reimbursementId: rdto.reimbursement_id,
-    author: rdto.author,
-    amount: rdto.amount,
-    dateSubmitted: rdto.date_submitted.getFullYear(),
-    dateResolved: rdto.date_resolved.getFullYear(),
-    description: rdto.description,
-    resolver: rdto.resolver,
-    status: rdto.status,
-    type: rdto.type,
+    reimbursementId: rto.reimbursement_id,
+    author: rto.author,
+    amount: rto.amount,
+    dateSubmitted: rto.date_submitted.getFullYear(),
+    dateResolved: rto.date_resolved.getFullYear(),
+    description: rto.description,
+    resolver: rto.resolver,
+    status
+    type
   };
-}
-
-// update
-
-export function ReimbursementDTOtoReimbursementConverter(dto: ReimbursementDTO): Reimbursement{
-  let status:ReimbursementStatus = ({ statusId:dto.status_id, status:dto.status });
-  let type:ReimbursementType = ({ typeId:dto.type_id, type:dto.type });
-
-  return{
-      reimbursementId: dto.reimbursement_id,
-      author: dto.author,
-      amount: dto.amount,
-      dateSubmitted: dto.date_submitted, 
-      dateResolved: dto.date_resolved, 
-      description: dto.description, 
-      resolver: dto.resolver, 
-      status,
-      type
-  }
 }
