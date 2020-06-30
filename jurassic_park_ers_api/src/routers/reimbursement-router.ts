@@ -7,7 +7,7 @@ export const reimbursementRouter = express.Router()
 reimbursementRouter.get('/status/:statusId', async (req: Request, res: Response, next:NextFunction) => {
     let {statusId} = req.params
     if (isNaN(+statusId)) {
-        next(new Error('Status ID must be a number'))
+        next(new Error('Id must be a number'))
     } else {
         try {
             let reimbursement = await findReimbursementByStatus(+statusId)
@@ -21,7 +21,7 @@ reimbursementRouter.get('/status/:statusId', async (req: Request, res: Response,
 reimbursementRouter.get('/author/userId/:id', async (req: Request, res: Response, next:NextFunction) => {
     let { id } = req.params
     if (isNaN(+id)) {
-        next(new Error('User ID must be a number'))
+        next(new Error('Id must be a number'))
     } else {
         try {
             let reimbursement = await getReimbursementByUser(+id)
