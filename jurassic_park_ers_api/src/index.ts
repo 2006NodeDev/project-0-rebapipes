@@ -4,7 +4,7 @@ import { reimbursementRouter } from './routers/reimbursement-router'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import { sessionMiddleware } from './middleware/session-middleware'
 import { LoginInvalidCredentialsError } from './errors/LoginInvalidCredentialsError'
-import { getUserByUsernameAndPassword } from './daos/user-dao';
+import { getByUsernameAndPassword } from './daos/user-dao';
 //import { authorizationMiddleware } from './middleware/authorization-middleware'
 //import { authenticationMiddleware } from './middleware/authentication-middleware'
 //import { AuthenticationError } from './errors/AuthenticationError'
@@ -33,7 +33,7 @@ app.post('/login', async (req:Request, res:Response, next:NextFunction)=>{
         throw new LoginInvalidCredentialsError()
     } else {
         try{
-            let user = await getUserByUsernameAndPassword(username, password)
+            let user = await getByUsernameAndPassword(username, password)
             req.session.user = user
             res.json(user)
         }catch(e){
