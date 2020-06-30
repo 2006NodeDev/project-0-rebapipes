@@ -17,7 +17,7 @@ export async function getAllUsers(){
         // Get a Connection
         client = await connectionPool.connect()
         // Send a Query
-        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
+        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id;`)
         return results.rows.map(UserDTOtoUserConvertor) // Return rows
     }catch(e){
         // in case we get an error we don't know 
@@ -42,7 +42,7 @@ export async function getUserById(id: number):Promise<User> {
                 u.email, 
                 u."role",
                 r.role_id,
-                from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
+                from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id 
                 where u.user_id = $1;`,
             [id])
         if(results.rowCount === 0){
@@ -68,7 +68,7 @@ export async function updateUser(){
         // Get a Connection
         client = await connectionPool.connect()
         // Send a Query
-        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id;`)
+        let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id;`)
         return results.rows.map(UserDTOtoUserConvertor) // Return rows
     }catch(e){
         // User === updateUser
@@ -94,7 +94,7 @@ export async function getUserByUsernameAndPassword(username:string, password:str
                 u.email ,
                 r.role_id , 
                 r."role" 
-                from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
+                from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id 
                 where u."username" = $1 and u."password" = $2;`,
             [username, password])
         if(results.rowCount === 0){
@@ -120,12 +120,12 @@ export async function saveOneUser(newUser:User):Promise<User>{
     try{
         client = await connectionPool.connect()
         await client.query('BEGIN;')
-        let roleId = await client.query(`select r."role_id" from jurassicpark.roles r where r."role" = $1`, [newUser.role])
+        let roleId = await client.query(`select r."role_id" from jurassic_park_ers_api.roles r where r."role" = $1`, [newUser.role])
         if(roleId.rowCount === 0){
             throw new Error('Role Not Found')
         }
         roleId = roleId.rows[0].role_id
-        let results = await client.query(`insert into jurassicpark.users ("username", "password","email", "firstName, "lastName", role")
+        let results = await client.query(`insert into jurassic_park_ers_api.users ("username", "password","email", "firstName, "lastName", role")
                                             values($1,$2,$3,$4) returning "user_id" `,
                                             [newUser.username, newUser.password, newUser.firstName, newUser.lastName, newUser.email, roleId])
         newUser.userId = results.rows[0].user_id

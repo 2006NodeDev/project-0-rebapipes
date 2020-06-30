@@ -15,7 +15,7 @@ export async function getAllReimbursements(){
         // Get a Connection
         client = await connectionPool.connect()
         // Send a Query
-        let results: QueryResult = await client.query(`select r.reimbursement_id, r.author , r."amount" , r.dateSubmitted, r.dateResolved, r."description", r.resolver, r.status, r.status_id, r.type, r.type_id, r."status" from jurassicpark.reimbursements r left join jurassicpark.status s on r."status" = s.status_id, r.type_id, r."type" from jurassicpark.reimbursements r left join jurassicpark.type t on r."type" = t.type_id;`)
+        let results: QueryResult = await client.query(`select r.reimbursement_id, r.author , r."amount" , r.dateSubmitted, r.dateResolved, r."description", r.resolver, r.status, r.status_id, r.type, r.type_id, r."status" from jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.status s on r."status" = s.status_id, r.type_id, r."type" from jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.type t on r."type" = t.type_id;`)
         return results.rows.map(ReimbursementDTOtoReimbursementConvertor) // Return rows
     }catch(e){
         // in case we get an error we don't know 
@@ -43,7 +43,7 @@ export async function getReimbursementById(id: number):Promise<Reimbursement> {
                 s.status_id, 
                 r."type",
                 t.type_id,
-                from jurassicpark.reimbursements r left join jurassicpark.reimbursements s on r."status" = s.status_id, jurassicpark.reimbursements r left join jurassicpark.reimbursements t on r."type" = t.type_id  
+                from jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.reimbursements s on r."status" = s.status_id, jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.reimbursements t on r."type" = t.type_id  
                 where r.reimbursement_id = $1;`,
             [id])
         if(results.rowCount === 0){
@@ -68,7 +68,7 @@ export async function findReimbursementByStatus(id: number):Promise<Reimbursemen
         client = await connectionPool.connect()
         let results: QueryResult = await client.query(`select s.status_id, 
             r."status",
-            from jurassicpark.reimbursements r left join jurassicpark.reimbursements s on r."status" = s.status_id
+            from jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.reimbursements s on r."status" = s.status_id
             where r.status_id = $1;`,
             [id])
         if(results.rowCount === 0){
@@ -99,7 +99,7 @@ export async function getReimbursementByUser(id: number):Promise<Reimbursement> 
                 u.email,
                 r.role_id, 
                 r."role" 
-                from jurassicpark.users u left join jurassicpark.roles r on u."role" = r.role_id 
+                from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id 
                 where u.user_id = $1;`,
             [id])
         if(results.rowCount === 0){
@@ -125,7 +125,7 @@ export async function submitReimbursement(){
         // Get a Connection
         client = await connectionPool.connect()
         // Send a Query
-        let results: QueryResult = await client.query(`select r.reimbursement_id, r.author , r."amount" , r.dateSubmitted, r.dateResolved, r."description", r.resolver, r.status, r.status_id, r.type, r.type_id, r."status" from jurassicpark.reimbursements r left join jurassicpark.status s on r."status" = s.status_id, r.type_id, r."type" from jurassicpark.reimbursements r left join jurassicpark.type t on r."type" = t.type_id;`)
+        let results: QueryResult = await client.query(`select r.reimbursement_id, r.author , r."amount" , r.dateSubmitted, r.dateResolved, r."description", r.resolver, r.status, r.status_id, r.type, r.type_id, r."status" from jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.status s on r."status" = s.status_id, r.type_id, r."type" from jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.type t on r."type" = t.type_id;`)
         return results.rows.map(ReimbursementDTOtoReimbursementConvertor) // Return rows
     }catch(e){
         // in case we get an error we don't know 
@@ -153,7 +153,7 @@ export async function updateReimbursement(id: number):Promise<Reimbursement> {
             s.status_id, 
             r."type",
             t.type_id,
-            from jurassicpark.reimbursements r left join jurassicpark.reimbursements s on r."status" = s.status_id, jurassicpark.reimbursements r left join jurassicpark.reimbursements t on r."type" = t.type_id  
+            from jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.reimbursements s on r."status" = s.status_id, jurassic_park_ers_api.reimbursements r left join jurassic_park_ers_api.reimbursements t on r."type" = t.type_id  
             where r.reimbursement_id = $1;`,
             [id])
         if(results.rowCount === 0){
