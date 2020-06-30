@@ -11,7 +11,7 @@ userRouter.use(authenticationMiddleware);
 // Get all Users
 userRouter.get(
   "/",
-  authorizationMiddleware(["Admin", "Finance-Manager"]),
+  authorizationMiddleware(["admin", "finance-manager"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let allUsers = await getAllUsers();
@@ -25,7 +25,7 @@ userRouter.get(
 // Find User(s) by Id
 userRouter.get(
   "/:id",
-  authorizationMiddleware(["Admin", "Finance-Manager"]),
+  authorizationMiddleware(["admin", "finance-manager"]),
   async (req: Request, res: Response, next: NextFunction) => {
     //figure out how to do basically userId===userId
     let { id } = req.params;
@@ -45,7 +45,7 @@ userRouter.get(
 // Update User(s)
 userRouter.patch(
   "/",
-  authorizationMiddleware(["Admin"]),
+  authorizationMiddleware(["admin"]),
   async (req: Request, res: Response) => {
     try {
       const { body } = req;
