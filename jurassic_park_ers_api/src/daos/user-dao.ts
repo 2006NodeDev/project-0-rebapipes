@@ -1,7 +1,7 @@
 import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
 import { User } from "../models/User";
-import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-converter";
+import { UserDTOtoUserConverter } from "../utils/UserDTO-to-User-converter";
 import { AuthenticationError } from '../errors/AuthenticationError';
 import { UserNotFoundError } from "../errors/UserNotFoundError"
 //import { AuthorizationError } from '../errors/AuthorizationError';
@@ -22,7 +22,7 @@ export async function getAllUsers():Promise<User[]>{
         if (results.rowCount === 0){
             throw new Error('No Users Found');
         }
-        return results.rows.map(UserDTOtoUserConvertor);
+        return results.rows.map(UserDTOtoUserConverter);
         
     } catch (error) {
         if (error.message === "User Not Found"){
@@ -51,7 +51,7 @@ export async function getUserByUserNameAndPassword(username:string, password:str
         if (results.rowCount === 0){
             throw new Error('User Not Found');
         }
-        return UserDTOtoUserConvertor(results.rows[0]);
+        return UserDTOtoUserConverter(results.rows[0]);
         
     } catch (error) {
         throw new AuthenticationError();
@@ -71,7 +71,7 @@ export async function getUsersById(id:number):Promise<User>{
         join jurassic_park_ers_api.roles r on u."role" = r.role_id
         where u.user_id = $1`, [id]); // parameterized queries
 
-        return UserDTOtoUserConvertor(results.rows[0]);
+        return UserDTOtoUserConverter(results.rows[0]);
 
     } catch (error) {
         if (error.message === "User Not Found"){
