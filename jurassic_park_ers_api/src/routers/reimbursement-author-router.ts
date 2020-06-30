@@ -1,27 +1,22 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { reimbursements } from './reimbursement-router';
+import { authorizationMiddleware } from '../middleware/authorization-middleware';
+import { getReimbursementsByUser } from '../dao/reimbursement-author-dao';
 
 export const reimbursementAuthorRouter = express.Router();
 
 // Get Reimbursement by Author (User)
-reimbursementAuthorRouter.get('/:userId', (req:Request, res:Response, next:NextFunction)=>{
+
+reimbursementAuthorRouter.get('/:userId', authorizationMiddleware(['admin', 'finance-manager', 'current']), async (req:Request, res:Response, next:NextFunction)=>{
     let {userId} = req.params;
 
     if(isNaN(+userId)){
-        res.status(400).send('ID must be a number')
+        res.status(400).send("Id must be a number")
     }else {
-        let found = false;
-        let found_reimbursements = [];
-        for (const reimbursement of reimbursements){
-            if (reimbursement.author === +userId){
-                found_reimbursements.push(reimbursement);
-                found = true;
-            }
+        try {
+            let reimbursement = await getReimbursementsByUser(+userId);
+            res.json(reimbursement);
+        } catch (error) {
+            next(error);
         }
-            if(!found){
-                res.json(found_reimbursements);
-            } else {
-                res.status(404).send('Reimbursement Not Found')
-            }
     }
-})
+});

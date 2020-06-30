@@ -61,7 +61,7 @@ export async function getUserById(id: number):Promise<User> {
 }
 
 // Update User(s)
-export async function updateUser(){
+export async function updateOneUser(){
     // Declare a Client
     let client:PoolClient
     try{
@@ -71,7 +71,7 @@ export async function updateUser(){
         let results: QueryResult = await client.query(`select u.user_id, u.username , u."password" , u.firstName, u.lastName u.email , r.role_id , r."role" from jurassic_park_ers_api.users u left join jurassic_park_ers_api.roles r on u."role" = r.role_id;`)
         return results.rows.map(UserDTOtoUserConvertor) // Return rows
     }catch(e){
-        // User === updateUser
+        // User === updateOneUser
         console.log(e)
         throw new AuthorizationError() // Not Authorized to Update User(s)
     }finally{

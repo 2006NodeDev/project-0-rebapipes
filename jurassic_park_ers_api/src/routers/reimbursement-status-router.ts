@@ -1,27 +1,21 @@
+import express, { Request, Response, NextFunction } from 'express';
+import { authorizationMiddleware } from '../middleware/authorization-middleware';
+import { getReimbursementsByStatus } from '../dao/reimbursement-status-dao';
 
-import express, { Request, Response} from 'express';
-import { reimbursements } from './reimbursement-router';
-
-export const reimbursementStatusRouter = express.Router()
+export const reimbursementStatusRouter = express.Router();
 
 // Get Reimbursement by Status
-reimbursementStatusRouter.get('/:status_id', (req:Request, res:Response)=>{
-    let {status_id} = req.params
-    if(isNaN(+status_id)){
-        res.status(400).send('ID must be a number')
-    } else {
-        let found = false
-        let found_reimbursements = []
 
-        reimbursements.forEach(reimbursement => {
-            if (reimbursement.status === +status_id) {
-                found_reimbursements.push(reimbursement)
-                res.json(reimbursement)
-                found = true 
-            }
-        })
-        if(!found){
-            res.status(404).send('Reimbursement Not Found')
+reimbursementStatusRouter.get('/:statusId', authorizationMiddleware(['admin', 'finance-manager', 'current']), async (req:Request, res:Response, next:NextFunction)=>{
+    let{statusId} = req.params;
+    if(isNaN(+statusId)){
+        res.status(400).send("Id must be a number")
+    } else{
+        try {
+            let reimbursement = await getReimbursementsByStatus(+statusId);
+            res.json(reimbursement);
+        } catch (error) {
+            next(error);
         }
     }
 })
