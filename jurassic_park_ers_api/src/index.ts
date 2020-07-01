@@ -16,13 +16,10 @@ import { getByUsernameAndPassword } from './daos/user-dao';
 const app = express()
 
 app.use(express.json())
-
 app.use(loggingMiddleware)
-
 app.use(sessionMiddleware)
 
 app.use('/users', userRouter)
-
 app.use('/reimbursements', reimbursementRouter)
 
 // Login
