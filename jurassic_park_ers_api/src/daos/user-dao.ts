@@ -46,7 +46,7 @@ export async function getByUsernameAndPassword(username:string, password:string)
                                             join jurassic_park_ers_api.roles r on u."role" = r.role_id
                                             where u."username" = $1 and u."password" = $2
                                             group by u.user_id, u.username, u.first_name, u.last_name, u.email, r.role_id, r."role"`,
-                                            [username, password]); // paramaterized queries, pg auto sanitizes
+                                            [username, password]); // paramaterized queries
 
         if (results.rowCount === 0){
             throw new Error('User Not Found');
