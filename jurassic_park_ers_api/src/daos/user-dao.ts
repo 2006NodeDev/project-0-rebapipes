@@ -37,26 +37,35 @@ export async function getAllUsers():Promise<User[]>{
 
 // Get by Username & Password
 
-export async function getByUsernameAndPassword(username:string, password:string):Promise<User>{
-    let client:PoolClient;
+export async function getByUsernameAndPassword(username:string, password:string):Promise<User> {
+    let client:PoolClient
     try {
-        client = await connectionPool.connect();
-        let results = await client.query(`select u.user_id, u.username, u.password, u.first_name, u.last_name, u.email, r.role_id, r."role" 
-                                            from jurassic_park_ers_api.users u
-                                            join jurassic_park_ers_api.roles r on u."role" = r.role_id
-                                            where u."username" = $1 and u."password" = $2
-                                            group by u.user_id, u.username, u.first_name, u.last_name, u.email, r.role_id, r."role"`,
-                                            [username, password]); // paramaterized queries
-
-        if (results.rowCount === 0){
-            throw new Error('User Not Found');
+        client = await connectionPool.connect()
+        let results = await client.query(`select u."user_id", 
+                                            u."username", 
+                                            u."password", 
+                                            u."first_name", 
+                                            u."last_name", 
+                                            u."email", 
+                                            r."role_id", 
+                                            r."role" from jurassic_park_ers_api.users u
+                                        left join jurassic_park_ers_api.roles r 
+                                        on u."role" = r."role_id"
+                                        where u."username" = $1 
+                                            and u."password" = $2;`,
+                                        [username, password])
+        if(results.rowCount === 0) {
+            throw new Error('User Not Found')
         }
-        return UserDTOtoUserConverter(results.rows[0]);
-        
-    } catch (error) {
-        throw new AuthenticationError();
-    } finally{
-        client && client.release();
+        return UserDTOtoUserConverter(results.rows[0])
+    } catch (e) {
+        if(e.message === 'User Not Found') {
+            throw new AuthenticationError()
+        }
+        console.log(e);
+        throw new Error('An Unkown Error Occurred')
+    } finally {
+        client && client.release()
     }
 }
 

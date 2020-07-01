@@ -3,9 +3,9 @@ import { userRouter } from './routers/user-router';
 import { reimbursementRouter } from './routers/reimbursement-router'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import { sessionMiddleware } from './middleware/session-middleware'
-import { LoginInvalidCredentialsError } from './errors/LoginInvalidCredentialsError'
 import { getByUsernameAndPassword } from './daos/user-dao';
-//import { AuthenticationError } from './errors/AuthenticationError'
+import { AuthenticationError } from './errors/AuthenticationError'
+//import { LoginInvalidCredentialsError } from './errors/LoginInvalidCredentialsError'
 
 const app = express()
 
@@ -17,31 +17,35 @@ app.use('/users', userRouter)
 app.use('/reimbursements', reimbursementRouter)
 
 // Login
-app.post('/login', async (req:Request, res:Response, next:NextFunction)=>{
-    let username = req.body.username
-    let password = req.body.password
-    if(!username || !password){
-        throw new LoginInvalidCredentialsError()
-    } else {
-        try{
-            let user = await getByUsernameAndPassword(username, password)
-            req.session.user = user
-            res.json(user)
-        }catch(e){
-            next(e)
-        }
-    }
-})
 
-app.use((err, req, res, next) => {
-  if (err.statusCode) {
-    res.status(err.statusCode).send(err.message);
-  } else {
-    console.log(err); 
-    res.status(500).send("Oops, Something went wrong");
+app.post('/login', async (req:Request, res:Response, next:NextFunction) => {
+  let username = req.body.username
+  let password = req.body.password
+
+  if(!username || !password) {
+      throw new AuthenticationError();
+  }
+  else { 
+      try {
+          let user = await getByUsernameAndPassword(username, password)
+          req.session.user = user
+          res.json(user)
+      } catch (e) {
+          next(e)
+      }
   }
 })
 
-app.listen(3030, () => {
+app.use((err, req, res, next) => {
+  if(err.statusCode) { 
+      res.status(err.statusCode).send(err.message) 
+  }
+  else { 
+      console.log(err);
+      res.status(500).send('Oops, something went wrong')
+  }
+})
+
+app.listen(3000, () => {
     console.log("Server Is Running");
 })
