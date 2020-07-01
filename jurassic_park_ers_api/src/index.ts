@@ -5,13 +5,7 @@ import { loggingMiddleware } from './middleware/logging-middleware'
 import { sessionMiddleware } from './middleware/session-middleware'
 import { LoginInvalidCredentialsError } from './errors/LoginInvalidCredentialsError'
 import { getByUsernameAndPassword } from './daos/user-dao';
-//import { authorizationMiddleware } from './middleware/authorization-middleware'
-//import { authenticationMiddleware } from './middleware/authentication-middleware'
 //import { AuthenticationError } from './errors/AuthenticationError'
-//import { AuthorizationError } from './errors/AuthorizationError'
-//import { LoginUserInputError } from './errors/LoginUserInputError'
-//import { UserNotFoundError } from './errors/UserNotFoundError'
-//import { UserInputError } from './errors/UserInputError'
 
 const app = express()
 
