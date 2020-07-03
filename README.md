@@ -112,7 +112,7 @@ The ReimbursementType model is used to track what kind of reimbursement is being
 * **Method:**
   `GET`
 
-* **Allowed Roles** `finance-manager`
+* **Allowed Roles** `finance manager`
 
 * **Response:**
     ```javascript
@@ -128,7 +128,7 @@ The ReimbursementType model is used to track what kind of reimbursement is being
 * **Method:**
   `GET`
 
-* **Allowed Roles** `finance-manager` or if the id provided matches the id of the current user
+* **Allowed Roles** `finance manager` or if the id provided matches the id of the current user
 
 * **Response:**
     ```javascript
@@ -167,7 +167,7 @@ Reimbursements should be ordered by date
 * **Method:**
   `GET`
 
-* **Allowed Roles** `finance-manager`
+* **Allowed Roles** `finance manager`
 
 * **Response:**
     ```javascript
@@ -186,7 +186,7 @@ Reimbursements should be ordered by date
 * **Method:**
   `GET`
 
-* **Allowed Roles** `finance-manager` or if ther userId is the user making the request.
+* **Allowed Roles** `finance manager` or if ther userId is the user making the request.
 
 * **Response:**
     ```javascript
@@ -222,7 +222,7 @@ Reimbursements should be ordered by date
 * **Method:**
   `PATCH`
 
-* **Allowed Roles** `finance-manager`
+* **Allowed Roles** `finance manager`
 
 * **Request**
   The reimbursementId must be presen as well as all fields to update, any field left undefined will not be updated. This can be used to approve and deny.
