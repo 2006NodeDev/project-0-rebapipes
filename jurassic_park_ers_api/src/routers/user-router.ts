@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { authenticationMiddleware } from '../middleware/authentication-middleware';
 import { authorizationMiddleware } from '../middleware/authorization-middleware';
-import { getAllUsers, getUserById, updateUser, saveOneUser } from '../daos/user-dao'
+import { getAllUsers, getUserById, updateUser, saveOneUser } from '../daos/User-dao'
 import { User } from '../models/User'
 import { UserInputError } from "../errors/UserInputError";
 
@@ -11,7 +11,7 @@ userRouter.use(authenticationMiddleware); // Authenticate User
 
 // Get all Users
 
-userRouter.get('/', authorizationMiddleware(['admin,']), async (req:Request, res:Response, next:NextFunction)=>{
+userRouter.get('/', authorizationMiddleware(['Admin,']), async (req:Request, res:Response, next:NextFunction)=>{
     try{
         let allUsers = await getAllUsers()
         res.json(allUsers)
@@ -22,7 +22,7 @@ userRouter.get('/', authorizationMiddleware(['admin,']), async (req:Request, res
 
 // Get User by Id
 
-userRouter.get('/:id', authorizationMiddleware (['admin', 'finance manager']), async (req:Request, res:Response, next:NextFunction)=>{
+userRouter.get('/:id', authorizationMiddleware (['Admin', 'Finance Manager']), async (req:Request, res:Response, next:NextFunction)=>{
     let {id} = req.params
     if(isNaN(+id)){
         res.status(400).send('Id must be a number')
@@ -38,7 +38,7 @@ userRouter.get('/:id', authorizationMiddleware (['admin', 'finance manager']), a
 
 // Update User
 
-userRouter.patch('/', authorizationMiddleware(['admin']), async (req:Request, res:Response, next:NextFunction)=>{
+userRouter.patch('/', authorizationMiddleware(['Admin']), async (req:Request, res:Response, next:NextFunction)=>{
     let { userId,
         username,
         password,

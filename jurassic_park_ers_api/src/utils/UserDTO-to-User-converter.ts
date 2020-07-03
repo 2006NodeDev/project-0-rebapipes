@@ -1,5 +1,5 @@
 import { User } from "../models/User";
-import { UserDTO } from "../dtos/user-dto";
+import { UserDTO } from "../dtos/User-dto";
 
 export function UserDTOtoUserConverter( udto:UserDTO ):User{
     return {

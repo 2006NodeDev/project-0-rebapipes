@@ -32,7 +32,7 @@ export async function getAllReimbursements():Promise<Reimbursement[]>{
     }
 }
 
-// Get Reimbursement by User Id
+// Get Reimbursement by user Id
 
 export async function getReimbursementByUserId(userId:number):Promise<Reimbursement[]> {
     let client:PoolClient
