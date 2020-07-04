@@ -1,11 +1,12 @@
 import session, { SessionOptions } from 'express-session'
 
+//Attaches a session object to the request where each unique connection to the server has a unique session
 const sessionConfig:SessionOptions = {
-    secret: 'secret', // needs to be updated
+    secret: 'secret',
     cookie:{
-        secure:false
+        secure: false
     },
-    resave:false,
+    resave: false,
     saveUninitialized:false
 }
 
