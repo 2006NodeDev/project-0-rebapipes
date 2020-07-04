@@ -32,7 +32,6 @@ app.post('/login', async (req:Request, res:Response, next:NextFunction) => {
     }
 })
 
-
 // Error Handling
 app.use((err, req, res, next) => {
     if(err.statusCode) { //if it's one of my custom HTTP errors
