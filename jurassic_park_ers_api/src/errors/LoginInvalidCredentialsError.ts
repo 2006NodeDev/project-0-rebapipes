@@ -1,7 +1,7 @@
-import {HttpError} from "./HttpError";
+import { HttpError } from "./HttpError";
 
 export class LoginInvalidCredentialsError extends HttpError {
     constructor() {
-        super(400, 'Invalid Credentials')
+        super(400, 'Please login with Username and Password')
     }
 }
