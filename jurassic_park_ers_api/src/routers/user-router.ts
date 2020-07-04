@@ -1,84 +1,24 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { authenticationMiddleware } from '../middleware/authentication-middleware';
-import { authorizationMiddleware } from '../middleware/authorization-middleware';
-import { getAllUsers, getUserById, updateUser, saveOneUser } from '../daos/User-dao'
-import { User } from '../models/User'
-import { UserInputError } from "../errors/UserInputError";
+import express, { Request, Response, NextFunction } from 'express'
+import { UserInputError } from '../errors/UserInputError'
+import { getAllUsers, saveOneUser, getUserById, updateOneUser } from '../daos/user-dao'
+import { User } from '../models/user'
+import { authenticationMiddleware } from '../middleware/authentication-middleware'
+import { authorizationMiddleware } from '../middleware/authorization-middleware'
 
-export const userRouter = express.Router();
+export const userRouter = express.Router()
+userRouter.use(authenticationMiddleware) 
 
-userRouter.use(authenticationMiddleware); // Authenticate User
-
-// Get all Users
-
-userRouter.get('/', authorizationMiddleware(['Admin,']), async (req:Request, res:Response, next:NextFunction)=>{
-    try{
+//Find all Users 
+userRouter.get('/', authorizationMiddleware(['Admin', 'Finance Manager']), async (req:Request, res:Response, next:NextFunction) => { 
+    try {
         let allUsers = await getAllUsers()
         res.json(allUsers)
-    } catch(e){
+    } catch (e) {
         next(e)
     }
 })
 
-// Get User by Id
-
-userRouter.get('/:id', authorizationMiddleware (['Admin', 'Finance Manager']), async (req:Request, res:Response, next:NextFunction)=>{
-    let {id} = req.params
-    if(isNaN(+id)){
-        res.status(400).send('Id must be a number')
-    } else {
-        try {
-            let user = await getUserById(+id)
-            res.json(user)
-        } catch (e) {
-            next(e)
-        }
-    }
-})
-
-// Update User
-
-userRouter.patch('/', authorizationMiddleware(['Admin']), async (req:Request, res:Response, next:NextFunction)=>{
-    let { userId,
-        username,
-        password,
-        firstName,
-        lastName,
-        email,
-        role } = req.body
-    if(!userId) { 
-        res.status(400).send('Id must be a number')
-    }
-    else if(isNaN(+userId)) { 
-        res.status(400).send('Please enter a valid Id')
-    }
-    else {
-        let updatedUser:User = {
-            userId,
-            username,
-            password,
-            firstName,
-            lastName,
-            email,
-            role
-        }
-        updatedUser.username = username || undefined
-        updatedUser.password = password || undefined
-        updatedUser.firstName = firstName || undefined
-        updatedUser.lastName = lastName || undefined
-        updatedUser.email = email || undefined
-        updatedUser.role = role || undefined
-        try {
-            let result = await updateUser(updatedUser)
-            res.json(result)
-        } catch (e) {
-            next(e)
-        }
-    }
-}) 
-
-// Save (Create) User
-
+//Create a User(s)
 userRouter.post('/', async (req:Request, res:Response, next:NextFunction) => {
     console.log(req.body);
     let { username,
@@ -108,3 +48,59 @@ userRouter.post('/', async (req:Request, res:Response, next:NextFunction) => {
         next(new UserInputError)
     }
 })
+
+//Find Users by Id
+userRouter.get('/:id', authorizationMiddleware(['Admin', 'Finance Manager', 'Current']), async (req:Request, res:Response, next:NextFunction) => {
+    let {id} = req.params
+    if(isNaN(+id)) {
+        res.status(400).send('Id must be a number')
+    }
+    else { 
+        try {
+            let userById = await getUserById(+id)
+            res.json(userById)
+        } catch (e) {
+            next(e)
+        }
+    }
+})
+
+//Update User, we assume that Admin will have access to UserId for each user
+userRouter.patch('/', authorizationMiddleware(['Admin']), async (req:Request, res:Response, next:NextFunction) => {
+    let { userId,
+        username,
+        password,
+        firstName,
+        lastName,
+        email,
+        role } = req.body
+    if(!userId) { //update request must contain a userId
+        res.status(400).send('Please enter a valid user Id')
+    }
+    else if(isNaN(+userId)) { //check if userId is valid
+        res.status(400).send('Id must be a number')
+    }
+    else {
+        let updatedOneUser:User = {
+            userId,
+            username,
+            password,
+            firstName,
+            lastName,
+            email,
+            role
+        }
+        updatedOneUser.username = username || undefined
+        updatedOneUser.password = password || undefined
+        updatedOneUser.firstName = firstName || undefined
+        updatedOneUser.lastName = lastName || undefined
+        updatedOneUser.email = email || undefined
+        updatedOneUser.role = role || undefined
+        try {
+            let result = await updateOneUser(updatedOneUser)
+            res.json(result)
+        } catch (e) {
+            next(e)
+        }
+    }
+}) 
