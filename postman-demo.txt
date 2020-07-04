@@ -1,0 +1,212 @@
+1) POST --> http://localhost:2006/login
+
+// Body
+
+{
+    "username" : "naturalselection",
+    "password" : "darwinism"
+}
+
+// Output (LOGIN BY USER)
+
+{
+    "userId": 1,
+    "username": "naturalselection",
+    "password": "darwinism",
+    "firstName": "Charles",
+    "lastName": "Darwin",
+    "email": "charles.darwin@jurassicpark.com",
+    "role": {
+        "role": "Admin",
+        "roleId": 1
+    }
+}
+
+-----------------------------------------------------
+
+2) POST --> http://localhost:2006/login
+
+// Body
+
+{
+    "username" : "jurassicparka",
+    "password" : "friends"
+}
+
+// Output (LOGIN BY USER)
+
+{
+    "userId": 3,
+    "username": "jurassicparka",
+    "password": "friends",
+    "firstName": "Benjamin",
+    "lastName": "Lockwood",
+    "email": "benjamin.lockwood@jurassicpark.com",
+    "role": {
+        "role": "Finance Manager",
+        "roleId": 2
+    }
+}
+
+-----------------------------------------------------
+
+3) GET --> http://localhost:2006/users
+
+// Body
+
+(GET DOESN'T HAVE A BODY)
+
+// Output
+
+(FINDS USERS - ALL)
+
+-----------------------------------------------------
+
+4) GET --> http://localhost:2006/users/4
+
+// Body
+
+(GET DOESN'T HAVE A BODY)
+
+// Output (FIND USERS BY ID)
+
+{
+    "userId": 4,
+    "username": "babysharkdoodoo",
+    "password": "doodoodoodoo",
+    "firstName": "Ellie",
+    "lastName": "Sattler",
+    "email": "ellie.sattler@jurassicpark.com",
+    "role": {
+        "role": "User",
+        "roleId": 3
+    }
+}
+
+-----------------------------------------------------
+
+5) PATCH --> http://localhost:2006/users
+
+// Body
+
+{
+    "userId": 8,
+    "username": "ibelieve",
+    "password": "ineverything"
+}
+
+// Output (UPDATE USER)
+
+{
+    "userId": 8,
+    "username": "ibelieve",
+    "password": "ineverything"
+}
+
+-----------------------------------------------------
+
+6) GET --> http://localhost:2006/reimbursements
+
+// Body
+
+(GET DOESN'T HAVE A BODY)
+
+// Output (FIND REIMBURSEMENTS - ALL)
+
+-----------------------------------------------------
+
+7) GET --> http://localhost:2006/reimbursements/status/1 
+
+// Body
+
+(GET DOESN'T HAVE A BODY)        
+
+// Output (FIND REIMBURSEMENT BY STATUS - PENDING (1))
+
+[
+    {
+        "reimbursementId": 10,
+        "author": 8,
+        "amount": "900.00",
+        "dateSubmitted": "1990-06-11T13:44:00.000Z",
+        "dateResolved": "1990-06-11T13:54:00.000Z",
+        "description": "Hired new trainer - Alec was eaten by Allosaurus",
+        "resolver": 3,
+        "status": {
+            "status": "Pending",
+            "statusId": 1
+        },
+        "type": {
+            "type": "Payroll",
+            "typeId": 4
+        }
+    }
+]
+
+-----------------------------------------------------
+
+8) GET --> http://localhost:2006/reimbursements/author/userId/4
+
+// Body
+
+(GET DOESN'T HAVE A BODY)
+
+// Output (FIND REIMBURSEMENT BY USER)
+
+[
+    {
+        "reimbursementId": 4,
+        "author": 2,
+        "amount": "669.00",
+        "dateSubmitted": "1990-02-02T11:16:00.000Z",
+        "dateResolved": "1990-02-02T11:56:00.000Z",
+        "description": "Purchased chupacabras to feed to Velociraptors",
+        "resolver": 3,
+        "status": {
+            "status": "Approved",
+            "statusId": 2
+        },
+        "type": {
+            "type": "Food",
+            "typeId": 3
+        }
+    }
+]
+
+-----------------------------------------------------
+
+9) POST --> http://localhost:2006/reimbursements
+
+// Body
+
+   {
+        "author": 8,
+        "amount": "567.00",
+        "dateSubmitted": "1990-09-30T04:10:00.000Z",
+        "description": "Purchased a baby Stegosaurus",
+        "type": "Inventory"
+    }
+
+// Output (SUBMIT REIMBURSEMENT)
+
+
+
+-----------------------------------------------------
+
+10) PATCH --> http://localhost:2006/reimbursements
+
+// Body
+
+{
+    "reimbursementId": 5,
+    "author": 6,
+    "description": "Hired groundskeeper to dispose of dinosaur poop"
+}
+
+// Output (UPDATE REIMBURSEMENT)
+
+{
+    "reimbursementId": 5,
+    "author": 6,
+    "description": "Hired groundskeeper to dispose of dinosaur poop"
+}
