@@ -1,7 +1,7 @@
 import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
 import { User } from "../models/user";
-import { UserDTOtoUserConverter } from "../utils/UserDTO-to-User-converter";
+import { UserDTOtoUserConverter } from "../utils/User-DTO-to-User-converter";
 import { UserNotFoundError } from "../errors/UserNotFoundError"
 import { UserInputError } from "../errors/UserInputError";
 import { AuthenticationError } from '../errors/AuthenticationError';

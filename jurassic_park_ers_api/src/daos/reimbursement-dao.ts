@@ -1,7 +1,7 @@
 import { PoolClient, QueryResult } from "pg";
 import { connectionPool } from ".";
 import { Reimbursement } from "../models/Reimbursement";
-import { ReimbursementDTOtoReimbursementConverter } from "../utils/ReimbursementDTO-to-Reimbursement-converter";
+import { ReimbursementDTOtoReimbursementConverter } from "../utils/Reimbursement-DTO-to-Reimbursement-converter";
 import { ReimbursementNotFoundError } from "../errors/ReimbursementNotFoundError";
 import { ReimbursementInputError } from "../errors/ReimbursementInputError";
 //import { UserInputError } from "../errors/UserInputError";
