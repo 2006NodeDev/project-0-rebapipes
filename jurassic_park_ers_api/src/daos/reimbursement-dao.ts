@@ -108,20 +108,20 @@ export async function getReimbursementByStatus(status:number):Promise<Reimbursem
 }
 
 // Save (Create) Reimbursement
-export async function saveOneReimbursement(newReim:Reimbursement):Promise<Reimbursement> {
+export async function saveOneReimbursement(newReimbursement:Reimbursement):Promise<Reimbursement> {
     let client:PoolClient
     try {
         client = await connectionPool.connect()
         await client.query('BEGIN;')
         let typeId = await client.query(`select t."type_id" from jurassic_park_ers_api.reimbursement_types t 
                                             where t."type" = $1;`,
-                                        [newReim.type])
+                                        [newReimbursement.type])
         if(typeId.rowCount === 0) {
             throw new Error('Type Not Found')
         }
         typeId = typeId.rows[0].type_id 
         let statusId = await client.query(`select rs."status_id" from jurassic_park_ers_api.reimbursement_statuses rs 
-                                            where rs."status" = $1;`, [newReim.status])
+                                            where rs."status" = $1;`, [newReimbursement.status])
         if(statusId.rowCount === 0) {
             throw new Error('Status Not Found')
         }
@@ -130,12 +130,12 @@ export async function saveOneReimbursement(newReim:Reimbursement):Promise<Reimbu
                                         "date_submitted", "description", "status", "type")
                                             values($1,$2,$3,$4,$5,$6) 
                                         returning "reimbursement_id";`,
-                                        [newReim.author, newReim.amount, newReim.dateSubmitted,
-                                            newReim.description, statusId, typeId]) 
-        newReim.reimbursementId = results.rows[0].reimbursement_id
+                                        [newReimbursement.author, newReimbursement.amount, newReimbursement.dateSubmitted,
+                                            newReimbursement.description, statusId, typeId]) 
+        newReimbursement.reimbursementId = results.rows[0].reimbursement_id
         
         await client.query('COMMIT;')
-        return newReim
+        return newReimbursement
     } catch (e) {
         client && client.query('ROLLBACK;')
         if(e.message === 'Type Not Found' || e.message === 'Status Not Found') {

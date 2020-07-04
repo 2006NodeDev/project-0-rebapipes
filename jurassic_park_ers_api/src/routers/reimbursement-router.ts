@@ -1,30 +1,41 @@
 import express, { Request, Response, NextFunction } from 'express'
+import { UserInputError } from '../errors/UserInputError'
 import { reimbursementStatusRouter } from './reimbursement-status-router'
 import { reimbursementAuthorRouter } from './reimbursement-author-router'
-import { Reimbursement } from '../models/Reimbursement'
-import { saveOneReimbursement, updateReimbursement } from '../daos/reimbursement-dao'
-import { ReimbursementInputError } from '../errors/ReimbursementInputError'
-//import { authorizationMiddleware } from '../middleware/authorization-middleware'
+import { Reimbursement } from '../models/reimbursement'
+import { submitOneReimbursement, updateOneReimbursement, getAllReimbursements } from '../daos/reimbursement-dao'
+import { authenticationMiddleware } from '../middleware/authentication-middleware'
+import { authorizationMiddleware } from '../middleware/authorization-middleware'
 
 export const reimbursementRouter = express.Router()
 
+reimbursementRouter.use(authenticationMiddleware)
+//Redirect all requests on /reimbursement/status to reimbursement-status-router
 reimbursementRouter.use('/status', reimbursementStatusRouter)
-
+//Redirect all requests on /reimbursement/author/userId to reimbursement-author-router
 reimbursementRouter.use('/author/userId', reimbursementAuthorRouter)
 
-// Save (Create) Reimbursement
+//Get All Reimbursements
+reimbursementRouter.get('/', authorizationMiddleware(['Admin', 'Finance Manager']), async (req:Request, res:Response, next:NextFunction) => { 
+    try {
+        let allReims = await getAllReimbursements()
+        res.json(allReims)
+    } catch (e) {
+        next(e)
+    }
+})
 
-reimbursementRouter.post('/', async (req:Request, res:Response, next:NextFunction) => {
+//Submit Reimbursement
+reimbursementRouter.post('/', authorizationMiddleware(['Admin', 'Finance Manager', 'User']), async (req:Request, res:Response, next:NextFunction) => {
     console.log(req.body);
-    let {
+    let { 
         author,
         amount,
         dateSubmitted,
         description,
-        status,
         type } = req.body
-    if(author && amount && dateSubmitted && description && status && type) {
-        let newReim: Reimbursement = {
+    if(author && amount && dateSubmitted && description && type) {
+        let newReimbursement: Reimbursement = {
             reimbursementId: 0,
             author,
             amount,
@@ -32,25 +43,28 @@ reimbursementRouter.post('/', async (req:Request, res:Response, next:NextFunctio
             dateResolved: null,
             description,
             resolver: null,
-            status,
+            status: //status is automatically 1:"Pending"
+                {
+                    status: 'Pending',
+                    statusId: 1
+                },
             type
         }
-        newReim.type = type || null
+        newReimbursement.type = type || null
         try {
-            let savedReim = await saveOneReimbursement(newReim)
-            res.json(savedReim)
+            let savedReimbursement = await submitOneReimbursement(newReimbursement)
+            res.json(savedReimbursement)
         } catch (e) {
             next(e)
         }
     }
     else {
-        throw new ReimbursementInputError()
+        throw new UserInputError()
     }
 })
 
-// Update Reimbursement
-
-reimbursementRouter.patch('/', async (req:Request, res:Response, next:NextFunction) => {
+//Update Reimbursement, we assume Admin and Finance Manager have userId for each user
+reimbursementRouter.patch('/', authorizationMiddleware(['Admin', 'Finance Manager']), async (req:Request, res:Response, next:NextFunction) => {
     let { reimbursementId,
         author,
         amount,
@@ -60,14 +74,14 @@ reimbursementRouter.patch('/', async (req:Request, res:Response, next:NextFuncti
         resolver,
         status,
         type } = req.body
-    if(!reimbursementId) { 
-        res.status(400).send('Please Fill Out All Fields')
+    if(!reimbursementId) { //update request must contain a reimbursementId
+        res.status(400).send('Please enter a valid reimbursement Id')
     }
-    else if(isNaN(+reimbursementId)) {
+    else if(isNaN(+reimbursementId)) { //check if reimbursementId is valid
         res.status(400).send('Id must be a number')
     }
     else { 
-        let updatedReimInfo:Reimbursement = { 
+        let updatedOneReimbursement:Reimbursement = { 
             reimbursementId, 
             author,
             amount,
@@ -78,16 +92,16 @@ reimbursementRouter.patch('/', async (req:Request, res:Response, next:NextFuncti
             status,
             type
         }
-        updatedReimInfo.author = author || undefined
-        updatedReimInfo.amount = amount || undefined
-        updatedReimInfo.dateSubmitted = dateSubmitted || undefined
-        updatedReimInfo.dateResolved = dateResolved || undefined
-        updatedReimInfo.description = description || undefined
-        updatedReimInfo.resolver = resolver || undefined
-        updatedReimInfo.status = status || undefined
-        updatedReimInfo.type = type || undefined
+        updatedOneReimbursement.author = author || undefined
+        updatedOneReimbursement.amount = amount || undefined
+        updatedOneReimbursement.dateSubmitted = dateSubmitted || undefined
+        updatedOneReimbursement.dateResolved = dateResolved || undefined
+        updatedOneReimbursement.description = description || undefined
+        updatedOneReimbursement.resolver = resolver || undefined
+        updatedOneReimbursement.status = status || undefined
+        updatedOneReimbursement.type = type || undefined
         try {
-            let results = await updateReimbursement(updatedReimInfo)
+            let results = await updateOneReimbursement(updatedOneReimbursement)
             res.json(results)
         } catch (e) {
             next(e)
